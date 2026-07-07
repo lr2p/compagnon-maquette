@@ -1,0 +1,296 @@
+<title>Compagnon — présentation du concept</title>
+<style>
+  :root{
+    --ground:#EFEADF; --page:#FBF9F3; --surface:#FFFFFF;
+    --ink:#1E241E; --ink-soft:#5A5A50; --hairline:#E4DECF;
+    --green:#2F7D63; --green-strong:#215B48; --green-tint:#E4F0EA;
+    --honey:#C98A3C; --honey-tint:#F6ECDA;
+    --warn:#B23A26; --warn-tint:#F8E7E1; --warn-strong:#8F2C1B;
+    --r:20px; --r-sm:13px;
+    --shadow:0 22px 50px -24px rgba(30,45,30,.4);
+    --shadow-soft:0 8px 22px -14px rgba(30,45,30,.4);
+    --display:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html{font-size:17px;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;font-family:var(--sans);color:var(--ink);line-height:1.6;
+    background:
+      radial-gradient(120% 60% at 85% -5%, var(--honey-tint) 0%, transparent 45%),
+      radial-gradient(110% 55% at 0% 0%, var(--green-tint) 0%, transparent 40%),
+      var(--ground);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 22px}
+  section{padding:64px 0}
+  .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:700;color:var(--green)}
+  h1,h2,h3{text-wrap:balance;margin:0}
+  h2{font-family:var(--display);font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.1;margin:10px 0 8px}
+  .lead{font-size:1.18rem;color:var(--ink-soft);max-width:62ch}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:700;font-size:1.08rem;
+    padding:16px 26px;border-radius:15px;cursor:pointer;text-decoration:none;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--green);color:#fff;box-shadow:var(--shadow-soft)}
+  .btn-primary:hover{background:var(--green-strong)}
+  .btn-ghost{background:var(--surface);border-color:var(--hairline);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--green)}
+
+  /* HERO */
+  .hero{padding:76px 0 52px}
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--hairline);
+    padding:7px 15px;border-radius:999px;font-size:.82rem;font-weight:600;color:var(--ink-soft);box-shadow:var(--shadow-soft);
+  }
+  .hero h1{font-family:var(--display);font-size:clamp(2.3rem,6.2vw,4rem);line-height:1.02;margin:22px 0 18px;letter-spacing:-.01em}
+  .hero h1 em{font-style:normal;color:var(--green);position:relative}
+  .hero .sub{font-size:1.3rem;color:var(--ink-soft);max-width:60ch;margin-bottom:32px}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .cta-row .hint{color:var(--ink-soft);font-size:.9rem}
+
+  /* generic cards grid */
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  @media (max-width:760px){.g3,.g2{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:26px 24px;box-shadow:var(--shadow-soft)}
+  .card .ic{font-size:1.9rem;line-height:1;margin-bottom:12px}
+  .card h3{font-size:1.2rem;margin-bottom:6px}
+  .card p{margin:0;color:var(--ink-soft);font-size:1rem}
+  .card .big{font-family:var(--display);font-size:2.4rem;color:var(--warn);line-height:1;font-variant-numeric:tabular-nums}
+  .card.hl{background:var(--green);color:#fff;border-color:transparent}
+  .card.hl h3,.card.hl p{color:#fff}
+  .card.hl p{opacity:.92}
+
+  .kicker{max-width:64ch}
+
+  /* two-screens showcase */
+  .showcase{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+  @media (max-width:820px){.showcase{grid-template-columns:1fr}}
+  .panel{background:var(--surface);border:1px solid var(--hairline);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+  .panel > .tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+  .panel h3{font-family:var(--display);font-size:1.35rem;margin-bottom:6px}
+  .panel .d{color:var(--ink-soft);font-size:.98rem;margin:0 0 18px}
+
+  /* mini senior mockup */
+  .mini{background:var(--page);border:1px solid var(--hairline);border-radius:18px;overflow:hidden}
+  .mini .mtop{background:linear-gradient(180deg,var(--green-strong),var(--green));color:#fff;padding:16px 18px}
+  .mini .mshield{display:inline-flex;gap:6px;align-items:center;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:600;margin-bottom:8px}
+  .mini .mgreet{font-family:var(--display);font-size:1.35rem}
+  .mini .mbody{padding:16px;display:flex;flex-direction:column;gap:12px}
+  .mtiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .mtile{background:var(--surface);border:1px solid var(--hairline);border-radius:14px;padding:14px;min-height:92px;display:flex;flex-direction:column;gap:6px}
+  .mtile .mic{font-size:1.5rem}
+  .mtile .ml{font-weight:700;font-size:.98rem}
+  .mtile .mbadge{align-self:flex-start;background:var(--warn);color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px}
+  .mtile .mbadge.ok{background:var(--green)}
+  .malert{background:var(--warn-tint);border:2px solid var(--warn);border-radius:13px;padding:13px 15px}
+  .malert .mh{color:var(--warn-strong);font-weight:800;font-size:.95rem;display:flex;gap:7px;align-items:center}
+  .malert .mt{color:var(--warn-strong);font-size:.85rem;margin-top:3px}
+
+  /* provider chips */
+  .providers{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .chip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--hairline);border-radius:13px;padding:11px 15px;font-weight:600;font-size:.95rem}
+  .plogo{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;flex:0 0 auto}
+
+  /* diff / list */
+  .checks{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+  .checks li{display:flex;gap:12px;align-items:flex-start;font-size:1.05rem}
+  .checks .ck{color:var(--green);font-weight:800;flex:0 0 auto}
+  .checks b{color:var(--ink)}
+
+  /* roadmap */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+  @media (max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:24px;position:relative}
+  .step .n{font-family:var(--display);font-size:1.1rem;color:#fff;background:var(--green);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:12px}
+  .step.done .n{background:var(--honey)}
+  .step h3{font-size:1.1rem;margin-bottom:5px}
+  .step p{margin:0;color:var(--ink-soft);font-size:.96rem}
+  .step .stat{margin-top:10px;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--honey)}
+  .step.done .stat{color:var(--green)}
+
+  /* final CTA */
+  .final{background:linear-gradient(160deg,var(--green),var(--green-strong));color:#fff;border-radius:28px;padding:48px 40px;text-align:center;box-shadow:var(--shadow)}
+  .final h2{color:#fff}
+  .final p{color:rgba(255,255,255,.9);font-size:1.15rem;max-width:52ch;margin:10px auto 26px}
+  .final .btn-primary{background:#fff;color:var(--green-strong)}
+  .final .btn-primary:hover{background:var(--honey-tint)}
+
+  footer{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:40px 0 56px}
+  .divider{height:1px;background:var(--hairline);max-width:960px;margin:0 auto}
+
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  :focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:6px}
+</style>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero reveal">
+    <span class="badge">🛡️ Concept produit · Maquette interactive</span>
+    <h1>Le numérique, enfin <em>simple</em> et <em>sûr</em> pour nos aînés.</h1>
+    <p class="sub">Un compagnon qui lit les mails, gère l'agenda et écrit aux proches — en très gros, sans jargon — et qui <strong>protège des arnaques</strong>, sous l'œil rassuré de la famille.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://lr2p.github.io/compagnon-maquette/" target="_blank" rel="noopener">▶ Essayer la maquette</a>
+      <a class="btn btn-ghost" href="#deux-ecrans">Voir comment ça marche</a>
+      <span class="hint">Cliquable — testez le mail « suspect » 🙂</span>
+    </div>
+  </header>
+
+</div>
+<div class="divider"></div>
+<div class="wrap">
+
+  <!-- PROBLEM -->
+  <section class="reveal">
+    <span class="eyebrow">Le constat</span>
+    <h2>Aujourd'hui, l'ordinateur fait plus peur qu'il n'aide.</h2>
+    <p class="lead kicker">Pour une personne âgée peu à l'aise, chaque écran est une source d'anxiété — et une porte ouverte aux escrocs.</p>
+    <div class="grid g3" style="margin-top:28px">
+      <div class="card"><div class="big">1ʳᵉ</div><h3>Cible des arnaques</h3><p>Les seniors sont les victimes les plus visées par les fraudes en ligne (faux EDF, faux colis, faux impôts…).</p></div>
+      <div class="card"><div class="ic">😵‍💫</div><h3>Trop compliqué</h3><p>Mails, mots de passe, boutons partout : la peur de « tout casser » les décourage d'essayer.</p></div>
+      <div class="card"><div class="ic">🤖</div><h3>L'IA les submerge</h3><p>ChatGPT ou Gemini sont trop généralistes et bavards : ils ajoutent de la complexité au lieu d'en retirer.</p></div>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- PROMISE -->
+  <section class="reveal">
+    <span class="eyebrow">La promesse</span>
+    <h2>Trois idées, une tranquillité.</h2>
+    <div class="grid g3" style="margin-top:28px">
+      <div class="card"><div class="ic">🌿</div><h3>Simplicité radicale</h3><p>Un seul écran calme, du texte énorme, quatre gros boutons. Rien à régler, rien à casser, tout est réversible.</p></div>
+      <div class="card hl"><div class="ic">🛡️</div><h3>Bouclier anti-arnaque</h3><p>Les messages dangereux sont repérés, expliqués simplement, et bloqués. « Ne répondez pas » plutôt qu'un piège.</p></div>
+      <div class="card"><div class="ic">👨‍👩‍👧</div><h3>La famille veille</h3><p>Un proche installe tout à distance et reçoit les alertes. La personne âgée n'a qu'à utiliser.</p></div>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- TWO SCREENS -->
+  <section id="deux-ecrans" class="reveal">
+    <span class="eyebrow">Comment ça marche</span>
+    <h2>Deux écrans, un seul système.</h2>
+    <p class="lead kicker">La personne âgée voit un outil ultra-simple. L'aidant dispose, en coulisses, d'une console de gestion et de sécurité.</p>
+
+    <div class="showcase" style="margin-top:30px">
+      <!-- senior -->
+      <div class="panel">
+        <span class="tag">① L'écran de la personne</span>
+        <h3>Grand, calme, rassurant.</h3>
+        <p class="d">Ses messages lus et résumés, l'agenda, écrire à un proche — et l'alerte rouge quand un message est suspect.</p>
+        <div class="mini">
+          <div class="mtop">
+            <span class="mshield">🛡️ Protégé par votre famille</span>
+            <div class="mgreet">Bonjour Jacqueline</div>
+          </div>
+          <div class="mbody">
+            <div class="mtiles">
+              <div class="mtile"><span class="mic">📬</span><span class="mbadge">2 nouveaux</span><span class="ml">Mes messages</span></div>
+              <div class="mtile"><span class="mic">📅</span><span class="mbadge ok">Aujourd'hui</span><span class="ml">Mon agenda</span></div>
+            </div>
+            <div class="malert">
+              <div class="mh">⚠️ Message suspect — ne répondez pas</div>
+              <div class="mt">Ce faux « EDF » veut vos coordonnées bancaires. Ce n'est pas le vrai EDF.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- family -->
+      <div class="panel">
+        <span class="tag">② L'espace famille</span>
+        <h3>L'aidant garde la main.</h3>
+        <p class="d">Il connecte les boîtes mail une fois, définit les garde-fous, et suit le bouclier — sans jamais déranger la personne âgée.</p>
+        <ul class="checks">
+          <li><span class="ck">✓</span><div><b>Installation à distance</b> — l'aidant connecte les comptes depuis chez lui.</div></li>
+          <li><span class="ck">✓</span><div><b>Alertes en temps réel</b> — « une arnaque a été bloquée », « votre parent a répondu à… ».</div></li>
+          <li><span class="ck">✓</span><div><b>Garde-fous</b> — contacts autorisés, confirmation avant chaque envoi.</div></li>
+          <li><span class="ck">✓</span><div><b>Journal clair</b> — tout ce que fait le compagnon reste visible et traçable.</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- MULTI-PROVIDER -->
+  <section class="reveal">
+    <span class="eyebrow">Compatibilité</span>
+    <h2>Tous les emails, pas seulement Gmail.</h2>
+    <p class="lead kicker">La personne âgée ne voit jamais le nom de son fournisseur — juste « Mes messages ». En coulisses, on se connecte à tout.</p>
+    <div class="providers">
+      <span class="chip"><span class="plogo" style="background:#D64B3F">M</span>Gmail</span>
+      <span class="chip"><span class="plogo" style="background:#0A6FC2">O</span>Outlook / Hotmail</span>
+      <span class="chip"><span class="plogo" style="background:#6B4FA0">Y</span>Yahoo</span>
+      <span class="chip"><span class="plogo" style="background:#4B5563">i</span>iCloud (Apple)</span>
+      <span class="chip"><span class="plogo" style="background:var(--honey)">@</span>Orange, SFR, Free…</span>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- DIFFERENTIATION -->
+  <section class="reveal">
+    <span class="eyebrow">Pourquoi nous, pas Google</span>
+    <h2>Nous ne vendons pas de l'intelligence. Nous vendons de la sérénité.</h2>
+    <div class="grid g2" style="margin-top:24px">
+      <div class="card">
+        <h3>Ce que font les géants</h3>
+        <p>Des assistants puissants et généralistes, pensés pour des utilisateurs autonomes. Ils lisent le mail… mais ne protègent personne et ne rassurent aucune famille.</p>
+      </div>
+      <div class="card hl">
+        <h3>Ce que nous faisons</h3>
+        <p>Un outil <strong>volontairement limité, sûr et bienveillant</strong>, conçu autour de la peur des arnaques et de la tranquillité des proches. C'est un marché que les géants ne servent pas.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- ROADMAP -->
+  <section class="reveal">
+    <span class="eyebrow">La suite</span>
+    <h2>Où nous en sommes.</h2>
+    <div class="steps" style="margin-top:26px">
+      <div class="step done"><div class="n">✓</div><h3>Maquette du parcours</h3><p>L'expérience de la personne âgée et l'espace famille, cliquables et validables dès maintenant.</p><div class="stat">Fait — vous y êtes</div></div>
+      <div class="step"><div class="n">2</div><h3>Le cœur technique</h3><p>Le connecteur email multi-fournisseurs et la couche de détection d'arnaque — le vrai moteur du produit.</p><div class="stat">Prochaine étape</div></div>
+      <div class="step"><div class="n">3</div><h3>Pilote avec des familles</h3><p>Mise entre les mains de premiers binômes senior + aidant pour affiner sécurité et ergonomie.</p><div class="stat">À planifier</div></div>
+    </div>
+  </section>
+
+</div>
+<div class="wrap">
+
+  <!-- FINAL CTA -->
+  <section class="reveal">
+    <div class="final">
+      <h2>Voyez-le de vos propres yeux.</h2>
+      <p>La maquette est cliquable : ouvrez « Mes messages », testez le faux mail EDF, envoyez une réponse à Sophie. Basculez ensuite sur l'espace famille.</p>
+      <a class="btn btn-primary" href="https://lr2p.github.io/compagnon-maquette/" target="_blank" rel="noopener">▶ Ouvrir la maquette interactive</a>
+    </div>
+  </section>
+
+  <footer>
+    Compagnon — nom de travail · Présentation de concept · Maquette non contractuelle.
+  </footer>
+
+</div>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
