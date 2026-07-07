@@ -1,0 +1,598 @@
+<title>Compagnon — maquette</title>
+<style>
+  /* Palette « Vert confiance & miel » — mode clair uniquement (pas de thème sombre) */
+  :root{
+    --ground:#E9E4D8;          /* fond chaud */
+    --app-bg:#F7F4EE;          /* écran de l'app */
+    --surface:#FFFFFF;         /* cartes */
+    --ink:#1E241E;             /* encre vert-noir chaud */
+    --ink-soft:#5A5A50;
+    --hairline:#E2DCCD;
+    /* vert confiance — l'accent, utilisé avec parcimonie */
+    --primary:#2F7D63;
+    --primary-strong:#215B48;
+    --primary-tint:#E4F0EA;
+    /* sémantiques — distinctes de l'accent */
+    --safe:#2E7D4F;
+    --safe-tint:#E6F1EA;
+    --warn:#B23A26;
+    --warn-tint:#F8E7E1;
+    --warn-strong:#8F2C1B;
+    --gold:#C98A3C;            /* miel */
+
+    --r-lg:22px;
+    --r-md:16px;
+    --shadow:0 18px 44px -20px rgba(30,36,25,.34);
+    --shadow-soft:0 6px 20px -12px rgba(30,36,25,.32);
+
+    --display:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color-scheme:light;        /* force le rendu clair des contrôles */
+  }
+
+  *{box-sizing:border-box}
+  html{font-size:18px}
+  body{
+    margin:0;font-family:var(--sans);color:var(--ink);
+    background:
+      radial-gradient(120% 90% at 50% -10%, color-mix(in srgb,var(--primary) 10%, var(--ground)) 0%, var(--ground) 55%);
+    min-height:100vh;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:24px 16px 56px;
+  }
+  .stage{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+  .toolbar .note{color:var(--ink-soft);font-size:.82rem;letter-spacing:.02em}
+  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:4px;box-shadow:var(--shadow-soft)}
+  .seg button{
+    border:0;background:transparent;color:var(--ink-soft);font-family:var(--sans);
+    font-size:.9rem;font-weight:600;padding:8px 16px;border-radius:999px;cursor:pointer;
+  }
+  .seg button[aria-pressed="true"]{background:var(--primary);color:#fff}
+
+  /* ============ SENIOR APP ============ */
+  .device{
+    width:100%;max-width:520px;background:var(--app-bg);border-radius:34px;
+    box-shadow:var(--shadow);border:1px solid var(--hairline);overflow:hidden;
+    min-height:760px;display:flex;flex-direction:column;position:relative;
+  }
+  .screen{display:none;flex-direction:column;flex:1;animation:rise .28s ease both}
+  .screen.active{display:flex}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.screen,.device *{animation:none!important;transition:none!important}}
+
+  .topbar{
+    background:linear-gradient(180deg,var(--primary-strong),var(--primary));
+    color:#fff;padding:22px 24px 24px;
+  }
+  .topbar .shield{
+    display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:600;
+    background:rgba(255,255,255,.16);padding:5px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  .greet{font-family:var(--display);font-size:2rem;line-height:1.1;text-wrap:balance;margin:0}
+  .greet small{display:block;font-family:var(--sans);font-weight:500;font-size:1rem;opacity:.9;margin-top:6px}
+
+  .body{padding:22px;display:flex;flex-direction:column;gap:16px;flex:1}
+
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .tile{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);
+    padding:22px 18px 20px;text-align:left;cursor:pointer;font-family:var(--sans);color:var(--ink);
+    display:flex;flex-direction:column;gap:12px;min-height:150px;box-shadow:var(--shadow-soft);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .tile:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .tile .ic{font-size:2.4rem;line-height:1}
+  .tile .lab{font-size:1.35rem;font-weight:700}
+  .tile .sub{font-size:.98rem;color:var(--ink-soft);font-weight:500;line-height:1.3}
+  .tile .badge{
+    align-self:flex-start;background:var(--warn);color:#fff;font-size:.82rem;font-weight:700;
+    padding:3px 11px;border-radius:999px;
+  }
+  .tile .badge.ok{background:var(--safe)}
+
+  /* back header inside sub-screens */
+  .subhead{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--hairline);background:var(--surface)}
+  .btn-back{
+    border:1px solid var(--hairline);background:var(--app-bg);color:var(--ink);
+    font-family:var(--sans);font-weight:700;font-size:1.05rem;padding:12px 18px;border-radius:14px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-back:hover{background:var(--primary-tint)}
+  .subhead h2{margin:0;font-size:1.3rem;font-family:var(--display)}
+
+  /* mail list */
+  .mlist{display:flex;flex-direction:column;gap:12px;padding:18px}
+  .mail{
+    display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;
+    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);
+    padding:16px;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);
+  }
+  .mail:hover{border-color:var(--primary)}
+  .mail.flag{border-color:var(--warn);background:var(--warn-tint)}
+  .avatar{
+    width:52px;height:52px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:#fff;font-size:1.25rem;
+  }
+  .mail .who{font-weight:700;font-size:1.12rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .mail .subj{color:var(--ink-soft);font-size:1rem;margin-top:2px}
+  .mail .time{margin-left:auto;color:var(--ink-soft);font-size:.85rem;flex:0 0 auto}
+  .flagchip{background:var(--warn);color:#fff;font-size:.74rem;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.02em}
+  .newdot{width:12px;height:12px;border-radius:50%;background:var(--primary);flex:0 0 auto;margin-top:7px}
+
+  /* read screen */
+  .read{padding:20px;display:flex;flex-direction:column;gap:18px}
+  .read .from{display:flex;gap:14px;align-items:center}
+  .read .from .who{font-size:1.25rem;font-weight:700}
+  .read .from .addr{color:var(--ink-soft);font-size:.9rem}
+  .read h3{font-family:var(--display);font-size:1.5rem;margin:0;text-wrap:balance}
+  .read .content{font-size:1.2rem;line-height:1.6;color:var(--ink)}
+  .warncard{
+    background:var(--warn-tint);border:2px solid var(--warn);border-radius:var(--r-md);padding:18px 20px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .warncard .h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;color:var(--warn-strong)}
+  .warncard ul{margin:2px 0 0;padding-left:22px;color:var(--warn-strong);font-size:1.02rem}
+  .warncard ul li{margin:4px 0}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+  .btn{
+    font-family:var(--sans);font-weight:700;font-size:1.12rem;padding:16px 22px;border-radius:16px;cursor:pointer;
+    border:1px solid transparent;display:inline-flex;align-items:center;gap:10px;flex:1;justify-content:center;min-width:140px;
+  }
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-strong)}
+  .btn-ghost{background:var(--surface);border-color:var(--hairline);color:var(--ink)}
+  .btn-ghost:hover{background:var(--primary-tint)}
+  .btn-danger{background:var(--warn);color:#fff}
+  .btn-warnghost{background:var(--surface);border-color:var(--warn);color:var(--warn-strong)}
+
+  /* reply */
+  .reply{padding:20px;display:flex;flex-direction:column;gap:16px}
+  .sugg-label{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-weight:600;font-size:.95rem}
+  .sugg{
+    background:var(--primary-tint);border:1px dashed var(--primary);border-radius:var(--r-md);
+    padding:18px;font-size:1.2rem;line-height:1.55;color:var(--ink);
+  }
+  .reply textarea{
+    width:100%;font-family:var(--sans);font-size:1.15rem;line-height:1.55;padding:16px;border-radius:var(--r-md);
+    border:1px solid var(--hairline);background:var(--surface);color:var(--ink);resize:vertical;min-height:120px;
+  }
+
+  /* contacts */
+  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px}
+  .contact{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:20px;
+    display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-soft);
+    font-family:var(--sans);color:var(--ink);
+  }
+  .contact:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .contact .avatar{width:72px;height:72px;font-size:1.7rem}
+  .contact .cn{font-weight:700;font-size:1.2rem}
+  .contact .cr{color:var(--ink-soft);font-size:.92rem}
+
+  /* toast + modal */
+  .toast{
+    position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--app-bg);padding:14px 22px;border-radius:14px;font-weight:600;font-size:1.02rem;
+    opacity:0;pointer-events:none;transition:.25s;display:flex;align-items:center;gap:10px;max-width:90%;text-align:center;
+    box-shadow:var(--shadow);z-index:40;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .modal{
+    position:absolute;inset:0;background:rgba(20,15,8,.5);display:none;align-items:center;justify-content:center;
+    padding:24px;z-index:50;
+  }
+  .modal.show{display:flex}
+  .card{
+    background:var(--surface);border-radius:24px;padding:26px;max-width:400px;width:100%;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:14px;text-align:center;
+  }
+  .card h4{font-family:var(--display);font-size:1.5rem;margin:0}
+  .card p{margin:0;color:var(--ink-soft);font-size:1.05rem}
+  .card .row{display:flex;gap:12px;margin-top:6px}
+
+  /* ============ CAREGIVER / FAMILY ============ */
+  .console{
+    width:100%;max-width:860px;background:var(--surface);border:1px solid var(--hairline);border-radius:26px;
+    box-shadow:var(--shadow);overflow:hidden;display:none;
+  }
+  .console.active{display:block}
+  .console .chead{
+    padding:24px 28px;border-bottom:1px solid var(--hairline);
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 8%,var(--surface)),var(--surface));
+  }
+  .chead .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:700;color:var(--primary)}
+  .chead h2{margin:4px 0 0;font-family:var(--display);font-size:1.55rem}
+  .cbody{padding:26px 28px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:680px){.cbody{grid-template-columns:1fr}}
+  .panel h3{font-size:1.05rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .panel .hint{color:var(--ink-soft);font-size:.9rem;margin:0 0 14px}
+
+  .provider{
+    display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--hairline);
+    border-radius:14px;margin-bottom:10px;background:var(--app-bg);
+  }
+  .plogo{width:40px;height:40px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1rem}
+  .provider .pn{font-weight:700}
+  .provider .pd{color:var(--ink-soft);font-size:.85rem}
+  .provider .pstate{margin-left:auto;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
+  .pstate.on{color:var(--safe)}
+  .btn-sm{border:1px solid var(--primary);background:transparent;color:var(--primary);font-weight:700;
+    padding:8px 14px;border-radius:10px;cursor:pointer;font-family:var(--sans);font-size:.9rem;margin-left:auto}
+  .btn-sm:hover{background:var(--primary-tint)}
+
+  .feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .feed li{display:flex;gap:12px;padding:13px 14px;border:1px solid var(--hairline);border-radius:13px;background:var(--app-bg);align-items:flex-start}
+  .feed .dotk{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+  .feed .k-warn{background:var(--warn)}
+  .feed .k-ok{background:var(--safe)}
+  .feed .k-info{background:var(--primary)}
+  .feed .ft{font-weight:600}
+  .feed .fm{color:var(--ink-soft);font-size:.88rem;margin-top:2px}
+  .feed .fw{margin-left:auto;color:var(--ink-soft);font-size:.78rem;flex:0 0 auto}
+  .statline{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .stat{flex:1;min-width:120px;background:var(--app-bg);border:1px solid var(--hairline);border-radius:14px;padding:14px 16px}
+  .stat .n{font-size:1.7rem;font-weight:800;font-variant-numeric:tabular-nums}
+  .stat .l{color:var(--ink-soft);font-size:.82rem}
+
+  :focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:6px}
+  .caption{color:var(--ink-soft);font-size:.85rem;text-align:center;max-width:520px;text-wrap:balance}
+</style>
+
+<div class="stage">
+  <div class="toolbar">
+    <div class="seg" role="tablist" aria-label="Vue">
+      <button id="tab-senior" aria-pressed="true" onclick="setView('senior')">👵 Écran de la personne</button>
+      <button id="tab-family" aria-pressed="false" onclick="setView('family')">👨‍👩‍👧 Espace famille</button>
+    </div>
+  </div>
+  <p class="caption" id="viewnote">Maquette cliquable — l'écran vu par la personne âgée. Tout est en très gros, calme, et chaque envoi demande une confirmation.</p>
+
+  <!-- ===================== SENIOR DEVICE ===================== -->
+  <div class="device" id="device">
+
+    <!-- HOME -->
+    <section class="screen active" id="s-home">
+      <div class="topbar">
+        <span class="shield">🛡️ Protégé par votre famille</span>
+        <h1 class="greet">Bonjour Jacqueline<small>Mardi 6 juillet · 14 h 20</small></h1>
+      </div>
+      <div class="body">
+        <div class="tiles">
+          <button class="tile" onclick="go('s-mail')">
+            <span class="ic">📬</span>
+            <span class="badge">2 nouveaux</span>
+            <span class="lab">Mes messages</span>
+            <span class="sub">Sophie vous a écrit</span>
+          </button>
+          <button class="tile" onclick="go('s-agenda')">
+            <span class="ic">📅</span>
+            <span class="badge ok">Aujourd'hui</span>
+            <span class="lab">Mon agenda</span>
+            <span class="sub">Rien de prévu cet après-midi</span>
+          </button>
+          <button class="tile" onclick="go('s-write')">
+            <span class="ic">✉️</span>
+            <span class="lab">Écrire à un proche</span>
+            <span class="sub">Sophie, Marc, le docteur…</span>
+          </button>
+          <button class="tile" onclick="toast('Bientôt disponible 🙂')">
+            <span class="ic">🖼️</span>
+            <span class="lab">Mes photos</span>
+            <span class="sub">La famille en a ajouté 4</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIL LIST -->
+    <section class="screen" id="s-mail">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
+        <h2>Mes messages</h2>
+      </div>
+      <div class="mlist" id="mlist"></div>
+    </section>
+
+    <!-- READ -->
+    <section class="screen" id="s-read">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-mail')">← Messages</button>
+        <h2>Message</h2>
+      </div>
+      <div class="read" id="readbox"></div>
+    </section>
+
+    <!-- REPLY -->
+    <section class="screen" id="s-reply">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-read')">← Retour</button>
+        <h2 id="reply-h">Répondre</h2>
+      </div>
+      <div class="reply">
+        <div class="sugg-label">✨ Réponse proposée — vous pouvez la modifier</div>
+        <textarea id="reply-text" aria-label="Votre réponse"></textarea>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="speak(document.getElementById('reply-text').value)">🔊 Écouter</button>
+          <button class="btn btn-primary" id="reply-send">Envoyer ✓</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section class="screen" id="s-agenda">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
+        <h2>Mon agenda</h2>
+      </div>
+      <div class="read">
+        <div class="content" style="font-size:1.25rem">
+          <p style="margin-top:0"><strong>Aujourd'hui, mardi 6 juillet</strong><br>Rien de prévu cet après-midi. Profitez-en 🙂</p>
+          <div style="height:1px;background:var(--hairline);margin:18px 0"></div>
+          <p><strong>Jeudi 8 juillet · 15 h 00</strong><br>Rendez-vous chez le <strong>Docteur Martin</strong><br><span style="color:var(--ink-soft)">12 rue des Lilas — pensez à votre carte Vitale</span></p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="toast('Rappel activé — on vous préviendra jeudi 🔔')">🔔 Me rappeler jeudi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WRITE (contacts) -->
+    <section class="screen" id="s-write">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
+        <h2>Écrire à un proche</h2>
+      </div>
+      <div class="contacts" id="contacts"></div>
+    </section>
+
+    <!-- COMPOSE -->
+    <section class="screen" id="s-compose">
+      <div class="subhead">
+        <button class="btn-back" onclick="go('s-write')">← Retour</button>
+        <h2 id="compose-h">Écrire</h2>
+      </div>
+      <div class="reply">
+        <div class="sugg-label">Écrivez votre message, ou dictez-le</div>
+        <textarea id="compose-text" aria-label="Votre message" placeholder="Bonjour…"></textarea>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="toast('🎤 Dictée — dites votre message')">🎤 Dicter</button>
+          <button class="btn btn-primary" id="compose-send">Envoyer ✓</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal" id="modal">
+      <div class="card">
+        <h4 id="m-title">Envoyer ce message&nbsp;?</h4>
+        <p id="m-text"></p>
+        <div class="row">
+          <button class="btn btn-ghost" onclick="closeModal()">Non, annuler</button>
+          <button class="btn btn-primary" id="m-ok">Oui, envoyer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FAMILY CONSOLE ===================== -->
+  <div class="console" id="console">
+    <div class="chead">
+      <div>
+        <div class="eyebrow">Espace famille</div>
+        <h2>Le compte de Jacqueline</h2>
+      </div>
+      <span class="pstate on" style="font-weight:700">🛡️ Protection active</span>
+    </div>
+    <div class="cbody">
+      <div class="panel">
+        <h3>📥 Boîtes mail connectées</h3>
+        <p class="hint">Vous connectez les comptes une fois, depuis chez vous. Jacqueline n'a rien à faire. Tous les fournisseurs sont pris en charge.</p>
+
+        <div class="provider">
+          <span class="plogo" style="background:#D64B3F">M</span>
+          <div><div class="pn">Gmail</div><div class="pd">jacqueline.d@gmail.com</div></div>
+          <span class="pstate on">✓ Connecté</span>
+        </div>
+        <div class="provider">
+          <span class="plogo" style="background:#0A6FC2">O</span>
+          <div><div class="pn">Outlook / Hotmail</div><div class="pd">jacqueline@hotmail.fr</div></div>
+          <span class="pstate on">✓ Connecté</span>
+        </div>
+        <div class="provider">
+          <span class="plogo" style="background:#6B4FA0">Y</span>
+          <div><div class="pn">Yahoo Mail</div><div class="pd">Non connecté</div></div>
+          <button class="btn-sm" onclick="fToast('Connexion Yahoo…')">Connecter</button>
+        </div>
+        <div class="provider">
+          <span class="plogo" style="background:#4B5563">i</span>
+          <div><div class="pn">iCloud (Apple)</div><div class="pd">Non connecté</div></div>
+          <button class="btn-sm" onclick="fToast('Connexion iCloud…')">Connecter</button>
+        </div>
+        <div class="provider">
+          <span class="plogo" style="background:var(--gold)">@</span>
+          <div><div class="pn">Autre (Orange, SFR, Free…)</div><div class="pd">Compte IMAP / adresse du fournisseur</div></div>
+          <button class="btn-sm" onclick="fToast('Ajout d\'une boîte IMAP…')">Ajouter</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>🛡️ Le bouclier — activité récente</h3>
+        <p class="hint">Vous êtes prévenu·e des messages suspects et des envois. Rien d'inquiétant côté Jacqueline : elle voit juste « message suspect, ne répondez pas ».</p>
+        <div class="statline">
+          <div class="stat"><div class="n" style="color:var(--warn)">3</div><div class="l">Arnaques bloquées (7 j)</div></div>
+          <div class="stat"><div class="n" style="color:var(--safe)">12</div><div class="l">Messages lus</div></div>
+          <div class="stat"><div class="n">4</div><div class="l">Réponses envoyées</div></div>
+        </div>
+        <ul class="feed">
+          <li><span class="dotk k-warn"></span><div><div class="ft">Arnaque « EDF » bloquée</div><div class="fm">Faux avis de suspension + demande de RIB. Signalée, Jacqueline avertie.</div></div><span class="fw">09:12</span></li>
+          <li><span class="dotk k-ok"></span><div><div class="ft">Réponse envoyée à Sophie</div><div class="fm">« Avec plaisir, je vous attends dimanche »</div></div><span class="fw">Hier</span></li>
+          <li><span class="dotk k-warn"></span><div><div class="ft">Faux SMS colis bloqué</div><div class="fm">Lien frauduleux La Poste</div></div><span class="fw">Lun.</span></li>
+          <li><span class="dotk k-info"></span><div><div class="ft">Rappel médecin ajouté</div><div class="fm">Dr Martin — jeudi 15 h</div></div><span class="fw">Lun.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="toast" id="ftoast" style="position:fixed"></div>
+  </div>
+</div>
+
+<script>
+  // ---------- data ----------
+  const MAILS = {
+    sophie:{who:'Sophie', role:'votre fille', color:'#C2557A', addr:'sophie.d@gmail.com', time:'11:40', new:true,
+      subj:'Coucou maman, on vient dimanche !',
+      body:"Coucou maman,\n\nJust pour te dire qu'on passe dimanche midi avec les enfants. Léo a hâte de te montrer son vélo !\n\nTu veux qu'on apporte le dessert ? Je t'embrasse fort.\nSophie",
+      scam:false,
+      reply:"Avec plaisir ma chérie, je vous attends dimanche midi. Ne t'occupe pas du dessert, je prépare une tarte. Grosses bises à Léo et aux enfants.\nMaman ❤️"},
+    medecin:{who:'Cabinet du Dr Martin', role:'', color:'#2E7D4F', addr:'secretariat@cabinet-martin.fr', time:'09:05', new:true,
+      subj:'Rappel de votre rendez-vous — jeudi 15 h',
+      body:"Bonjour Madame,\n\nNous vous rappelons votre rendez-vous avec le Docteur Martin le jeudi 8 juillet à 15 h 00.\n\nMerci de venir avec votre carte Vitale.\nLe secrétariat",
+      scam:false,
+      reply:"Bonjour, c'est bien noté pour jeudi 15 h. Je serai présente avec ma carte Vitale. Merci à vous.\nJacqueline"},
+    edf:{who:'Service EDF', role:'', color:'#B23A26', addr:'no-reply@edf-facture-secure.net', time:'08:47', new:false,
+      subj:'URGENT : votre compte va être suspendu',
+      body:"Cher client,\n\nVotre dernière facture n'a pas pu être prélevée. Sans régularisation sous 24 h, votre électricité sera COUPÉE.\n\nCliquez ici pour mettre à jour vos coordonnées bancaires : http://edf-facture-secure.net/paiement\n\nService recouvrement",
+      scam:true},
+  };
+  const MAIL_ORDER = ['sophie','medecin','edf'];
+
+  const CONTACTS = [
+    {who:'Sophie', role:'votre fille', color:'#C2557A', reply:"Bonjour ma chérie, "},
+    {who:'Marc', role:'votre fils', color:'#1E6091', reply:"Bonjour Marc, "},
+    {who:'Docteur Martin', role:'votre médecin', color:'#2E7D4F', reply:"Bonjour Docteur, "},
+    {who:'Pharmacie des Lilas', role:'', color:'#B67A2E', reply:"Bonjour, "},
+  ];
+
+  const initials = n => n.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+  // ---------- navigation ----------
+  function go(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
+    if(id==='s-mail') renderMail();
+    if(id==='s-write') renderContacts();
+    document.getElementById('device').scrollTop=0;
+  }
+  function setView(v){
+    const senior=v==='senior';
+    document.getElementById('device').style.display=senior?'flex':'none';
+    document.getElementById('console').classList.toggle('active',!senior);
+    document.getElementById('tab-senior').setAttribute('aria-pressed',senior);
+    document.getElementById('tab-family').setAttribute('aria-pressed',!senior);
+    document.getElementById('viewnote').textContent = senior
+      ? "Maquette cliquable — l'écran vu par la personne âgée. Tout est en très gros, calme, et chaque envoi demande une confirmation."
+      : "L'espace de l'aidant (l'enfant adulte) — il connecte les boîtes mail de tous les fournisseurs et surveille le bouclier anti-arnaque.";
+  }
+
+  // ---------- render mail list ----------
+  function renderMail(){
+    const box=document.getElementById('mlist'); box.innerHTML='';
+    MAIL_ORDER.forEach(k=>{
+      const m=MAILS[k];
+      const el=document.createElement('button');
+      el.className='mail'+(m.scam?' flag':'');
+      el.onclick=()=>openMail(k);
+      el.innerHTML=`
+        <div class="avatar" style="background:${m.color}">${m.scam?'⚠️':initials(m.who)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="who">${m.who}${m.role?` <span style="color:var(--ink-soft);font-weight:500;font-size:.95rem">· ${m.role}</span>`:''}
+            ${m.scam?'<span class="flagchip">SUSPECT</span>':''}</div>
+          <div class="subj">${m.subj}</div>
+        </div>
+        ${m.new&&!m.scam?'<span class="newdot" aria-label="nouveau"></span>':''}
+        <span class="time">${m.time}</span>`;
+      box.appendChild(el);
+    });
+  }
+
+  // ---------- open a mail ----------
+  function openMail(k){
+    const m=MAILS[k]; const box=document.getElementById('readbox');
+    if(m.scam){
+      box.innerHTML=`
+        <div class="warncard">
+          <div class="h">⚠️ Message suspect — ne répondez pas</div>
+          <div style="color:var(--warn-strong);font-weight:600">Ce message essaie de vous faire peur pour voler vos informations bancaires. Ce n'est pas le vrai EDF.</div>
+          <ul>
+            <li>L'adresse (<em>edf-facture-secure.net</em>) n'est pas celle d'EDF.</li>
+            <li>Il vous menace d'une coupure en 24 h pour vous presser.</li>
+            <li>Il demande vos coordonnées bancaires par un lien.</li>
+          </ul>
+        </div>
+        <div class="from"><div class="avatar" style="background:${m.color}">⚠️</div>
+          <div><div class="who">${m.who}</div><div class="addr">${m.addr}</div></div></div>
+        <h3>${m.subj}</h3>
+        <div class="content" style="color:var(--ink-soft)">${m.body.replace(/\n/g,'<br>')}</div>
+        <div class="actions">
+          <button class="btn btn-danger" onclick="toast('Message supprimé et signalé ✓');go('s-mail')">🗑️ Supprimer</button>
+          <button class="btn btn-warnghost" onclick="toast('Votre fils Marc a été prévenu 🛡️')">Prévenir ma famille</button>
+        </div>`;
+    } else {
+      box.innerHTML=`
+        <div class="from"><div class="avatar" style="background:${m.color}">${initials(m.who)}</div>
+          <div><div class="who">${m.who}${m.role?` · ${m.role}`:''}</div><div class="addr">${m.addr}</div></div></div>
+        <h3>${m.subj}</h3>
+        <div class="content">${m.body.replace(/\n/g,'<br>')}</div>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="speak(${JSON.stringify(m.body).replace(/"/g,'&quot;')})">🔊 Lire à voix haute</button>
+          <button class="btn btn-primary" onclick="openReply('${k}')">↩︎ Répondre</button>
+        </div>`;
+    }
+    go('s-read');
+  }
+
+  // ---------- reply ----------
+  function openReply(k){
+    const m=MAILS[k];
+    document.getElementById('reply-h').textContent='Répondre à '+m.who;
+    document.getElementById('reply-text').value=m.reply||'';
+    document.getElementById('reply-send').onclick=()=>confirmSend(m.who);
+    go('s-reply');
+  }
+
+  // ---------- contacts / compose ----------
+  function renderContacts(){
+    const box=document.getElementById('contacts'); box.innerHTML='';
+    CONTACTS.forEach(c=>{
+      const el=document.createElement('button');
+      el.className='contact'; el.onclick=()=>openCompose(c);
+      el.innerHTML=`<div class="avatar" style="background:${c.color}">${initials(c.who)}</div>
+        <div class="cn">${c.who}</div>${c.role?`<div class="cr">${c.role}</div>`:''}`;
+      box.appendChild(el);
+    });
+  }
+  function openCompose(c){
+    document.getElementById('compose-h').textContent='Écrire à '+c.who;
+    document.getElementById('compose-text').value=c.reply||'';
+    document.getElementById('compose-send').onclick=()=>confirmSend(c.who);
+    go('s-compose');
+  }
+
+  // ---------- confirm modal ----------
+  function confirmSend(name){
+    document.getElementById('m-title').textContent='Envoyer ce message ?';
+    document.getElementById('m-text').textContent='Le message sera envoyé à '+name+'.';
+    document.getElementById('m-ok').onclick=()=>{closeModal();toast('Message envoyé à '+name+' ✓');go('s-home');};
+    document.getElementById('modal').classList.add('show');
+  }
+  function closeModal(){document.getElementById('modal').classList.remove('show');}
+
+  // ---------- toast + speech ----------
+  let tT;
+  function toast(msg){
+    const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('show'),2600);
+  }
+  let fT;
+  function fToast(msg){
+    const t=document.getElementById('ftoast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(fT); fT=setTimeout(()=>t.classList.remove('show'),2400);
+  }
+  function speak(text){
+    if('speechSynthesis' in window){
+      const u=new SpeechSynthesisUtterance(text); u.lang='fr-FR'; u.rate=.95;
+      speechSynthesis.cancel(); speechSynthesis.speak(u); toast('🔊 Lecture en cours…');
+    } else { toast('La lecture vocale sera disponible dans l\'app'); }
+  }
+</script>
