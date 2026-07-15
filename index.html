@@ -1,373 +1,337 @@
-<title>Compagnon — maquette</title>
+<title>XMO — maquette du cockpit</title>
 <style>
-  /* Palette « Vert confiance & miel » — mode clair uniquement (pas de thème sombre) */
   :root{
-    --ground:#E9E4D8;          /* fond chaud */
-    --app-bg:#F7F4EE;          /* écran de l'app */
-    --surface:#FFFFFF;         /* cartes */
-    --ink:#1E241E;             /* encre vert-noir chaud */
-    --ink-soft:#5A5A50;
-    --hairline:#E2DCCD;
-    /* vert confiance — l'accent, utilisé avec parcimonie */
-    --primary:#2F7D63;
-    --primary-strong:#215B48;
-    --primary-tint:#E4F0EA;
-    /* sémantiques — distinctes de l'accent */
-    --safe:#2E7D4F;
-    --safe-tint:#E6F1EA;
-    --warn:#B23A26;
-    --warn-tint:#F8E7E1;
-    --warn-strong:#8F2C1B;
-    --gold:#C98A3C;            /* miel */
-
-    --r-lg:22px;
-    --r-md:16px;
-    --shadow:0 18px 44px -20px rgba(30,36,25,.34);
-    --shadow-soft:0 6px 20px -12px rgba(30,36,25,.32);
-
+    --ground:#DFE3D6; --screen:#F4F1E9; --surface:#FFFFFF;
+    --ink:#1E241E; --ink-soft:#5A5A50; --hairline:#E1DBCB;
+    --green:#2F7D63; --green-strong:#215B48; --green-tint:#E4F0EA;
+    --honey:#C98A3C; --honey-tint:#F6ECDA;
+    --warn:#B23A26; --warn-tint:#F8E7E1; --warn-strong:#8F2C1B;
+    --r:20px; --r-sm:14px;
+    --shadow:0 24px 60px -26px rgba(25,40,25,.5);
+    --shadow-soft:0 8px 22px -14px rgba(25,40,25,.4);
     --display:Georgia,'Times New Roman',serif;
     --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    color-scheme:light;        /* force le rendu clair des contrôles */
+    color-scheme:light;
   }
-
   *{box-sizing:border-box}
-  html{font-size:18px}
+  html{font-size:17px}
   body{
-    margin:0;font-family:var(--sans);color:var(--ink);
+    margin:0;font-family:var(--sans);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+    background:var(--ground);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ===== the screen / cockpit ===== */
+  .os{
+    width:100%;max-width:1080px;height:min(760px,86vh);position:relative;overflow:hidden;
+    border-radius:26px;box-shadow:var(--shadow);border:1px solid var(--hairline);
     background:
-      radial-gradient(120% 90% at 50% -10%, color-mix(in srgb,var(--primary) 10%, var(--ground)) 0%, var(--ground) 55%);
-    min-height:100vh;line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    padding:24px 16px 56px;
+      radial-gradient(90% 70% at 82% 8%, var(--honey-tint) 0%, transparent 42%),
+      radial-gradient(80% 70% at 10% 6%, var(--green-tint) 0%, transparent 40%),
+      var(--screen);
+    display:flex;flex-direction:column;
   }
-  .stage{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
-  .toolbar .note{color:var(--ink-soft);font-size:.82rem;letter-spacing:.02em}
-  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:4px;box-shadow:var(--shadow-soft)}
-  .seg button{
-    border:0;background:transparent;color:var(--ink-soft);font-family:var(--sans);
-    font-size:.9rem;font-weight:600;padding:8px 16px;border-radius:999px;cursor:pointer;
-  }
-  .seg button[aria-pressed="true"]{background:var(--primary);color:#fff}
 
-  /* ============ SENIOR APP ============ */
-  .device{
-    width:100%;max-width:520px;background:var(--app-bg);border-radius:34px;
-    box-shadow:var(--shadow);border:1px solid var(--hairline);overflow:hidden;
-    min-height:760px;display:flex;flex-direction:column;position:relative;
-  }
-  .screen{display:none;flex-direction:column;flex:1;animation:rise .28s ease both}
-  .screen.active{display:flex}
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.screen,.device *{animation:none!important;transition:none!important}}
-
+  /* ===== top bar ===== */
   .topbar{
-    background:linear-gradient(180deg,var(--primary-strong),var(--primary));
-    color:#fff;padding:22px 24px 24px;
+    display:flex;align-items:center;gap:16px;padding:16px 22px;flex:0 0 auto;
+    background:rgba(255,255,255,.62);backdrop-filter:blur(6px);border-bottom:1px solid var(--hairline);
   }
-  .topbar .shield{
-    display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:600;
-    background:rgba(255,255,255,.16);padding:5px 12px;border-radius:999px;margin-bottom:14px;
+  .pastille{
+    width:58px;height:58px;border-radius:50%;flex:0 0 auto;cursor:pointer;border:0;
+    background:radial-gradient(circle at 35% 30%, var(--green) 0%, var(--green-strong) 100%);
+    box-shadow:0 0 0 3px var(--honey), var(--shadow-soft);
+    color:#fff;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
   }
-  .greet{font-family:var(--display);font-size:2rem;line-height:1.1;text-wrap:balance;margin:0}
-  .greet small{display:block;font-family:var(--sans);font-weight:500;font-size:1rem;opacity:.9;margin-top:6px}
+  .pastille:hover{transform:scale(1.06)}
+  .pastille small{display:block;font-size:.55rem;letter-spacing:.18em;opacity:.85;margin-top:-2px;font-family:var(--sans)}
+  .avatar-home{width:52px;height:52px;border-radius:50%;flex:0 0 auto;object-fit:cover;
+    background:linear-gradient(140deg,#C2557A,#8f3d5b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;border:3px solid #fff;box-shadow:var(--shadow-soft)}
+  .whoami{display:flex;flex-direction:column;min-width:0}
+  .whoami .hi{font-family:var(--display);font-size:1.32rem;line-height:1.05}
+  .whoami .dt{color:var(--ink-soft);font-size:.85rem}
+  .topbar .spacer{flex:1}
+  .top-pill{background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:9px 15px;font-weight:600;font-size:.9rem;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
 
-  .body{padding:22px;display:flex;flex-direction:column;gap:16px;flex:1}
+  /* ===== content / universes ===== */
+  .content{flex:1;overflow-y:auto;padding:24px 26px 30px;position:relative}
+  .universe{display:none;animation:fade .25s ease both}
+  .universe.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .tile{
-    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);
-    padding:22px 18px 20px;text-align:left;cursor:pointer;font-family:var(--sans);color:var(--ink);
-    display:flex;flex-direction:column;gap:12px;min-height:150px;box-shadow:var(--shadow-soft);
-    transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .tile:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-  .tile .ic{font-size:2.4rem;line-height:1}
-  .tile .lab{font-size:1.35rem;font-weight:700}
-  .tile .sub{font-size:.98rem;color:var(--ink-soft);font-weight:500;line-height:1.3}
-  .tile .badge{
-    align-self:flex-start;background:var(--warn);color:#fff;font-size:.82rem;font-weight:700;
-    padding:3px 11px;border-radius:999px;
-  }
-  .tile .badge.ok{background:var(--safe)}
+  .u-title{display:flex;align-items:center;gap:12px;margin:0 0 4px}
+  .u-title .em{font-size:1.9rem}
+  .u-title h2{font-family:var(--display);font-size:1.7rem;margin:0}
+  .u-sub{color:var(--ink-soft);margin:0 0 20px;font-size:1.02rem}
 
-  /* back header inside sub-screens */
-  .subhead{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--hairline);background:var(--surface)}
-  .btn-back{
-    border:1px solid var(--hairline);background:var(--app-bg);color:var(--ink);
-    font-family:var(--sans);font-weight:700;font-size:1.05rem;padding:12px 18px;border-radius:14px;cursor:pointer;
-    display:inline-flex;align-items:center;gap:8px;
+  /* home grid of universes */
+  .home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:780px){.home-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:520px){.home-grid{grid-template-columns:1fr}}
+  .uni{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:20px 18px;
+    text-align:left;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);
+    display:flex;flex-direction:column;gap:8px;min-height:128px;position:relative;transition:transform .12s ease,box-shadow .12s ease;
   }
-  .btn-back:hover{background:var(--primary-tint)}
-  .subhead h2{margin:0;font-size:1.3rem;font-family:var(--display)}
+  .uni:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .uni .em{font-size:2.1rem;line-height:1}
+  .uni .nm{font-weight:800;font-size:1.12rem;letter-spacing:.01em}
+  .uni .ds{color:var(--ink-soft);font-size:.9rem;line-height:1.3}
+  .uni .count{position:absolute;top:14px;right:14px;background:var(--honey);color:#fff;font-weight:800;font-size:.82rem;padding:3px 11px;border-radius:999px;box-shadow:var(--shadow-soft)}
+  .uni.accent{background:linear-gradient(160deg,var(--green),var(--green-strong));border-color:transparent}
+  .uni.accent .nm,.uni.accent .em{color:#fff}
+  .uni.accent .ds{color:rgba(255,255,255,.9)}
 
-  /* mail list */
-  .mlist{display:flex;flex-direction:column;gap:12px;padding:18px}
-  .mail{
-    display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;
-    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);
-    padding:16px;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);
-  }
-  .mail:hover{border-color:var(--primary)}
-  .mail.flag{border-color:var(--warn);background:var(--warn-tint)}
-  .avatar{
-    width:52px;height:52px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
-    font-weight:700;color:#fff;font-size:1.25rem;
-  }
-  .mail .who{font-weight:700;font-size:1.12rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .mail .subj{color:var(--ink-soft);font-size:1rem;margin-top:2px}
-  .mail .time{margin-left:auto;color:var(--ink-soft);font-size:.85rem;flex:0 0 auto}
-  .flagchip{background:var(--warn);color:#fff;font-size:.74rem;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.02em}
-  .newdot{width:12px;height:12px;border-radius:50%;background:var(--primary);flex:0 0 auto;margin-top:7px}
-
-  /* read screen */
-  .read{padding:20px;display:flex;flex-direction:column;gap:18px}
-  .read .from{display:flex;gap:14px;align-items:center}
-  .read .from .who{font-size:1.25rem;font-weight:700}
-  .read .from .addr{color:var(--ink-soft);font-size:.9rem}
-  .read h3{font-family:var(--display);font-size:1.5rem;margin:0;text-wrap:balance}
-  .read .content{font-size:1.2rem;line-height:1.6;color:var(--ink)}
-  .warncard{
-    background:var(--warn-tint);border:2px solid var(--warn);border-radius:var(--r-md);padding:18px 20px;
-    display:flex;flex-direction:column;gap:8px;
-  }
-  .warncard .h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;color:var(--warn-strong)}
-  .warncard ul{margin:2px 0 0;padding-left:22px;color:var(--warn-strong);font-size:1.02rem}
-  .warncard ul li{margin:4px 0}
-  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
-  .btn{
-    font-family:var(--sans);font-weight:700;font-size:1.12rem;padding:16px 22px;border-radius:16px;cursor:pointer;
-    border:1px solid transparent;display:inline-flex;align-items:center;gap:10px;flex:1;justify-content:center;min-width:140px;
-  }
-  .btn-primary{background:var(--primary);color:#fff}
-  .btn-primary:hover{background:var(--primary-strong)}
+  /* generic content cards inside universes */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+  .ccard{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:6px}
+  .card .cem{font-size:1.6rem}
+  .card .ct{font-weight:700}
+  .card .cd{color:var(--ink-soft);font-size:.85rem}
+  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;padding:12px 18px;border-radius:13px;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;gap:9px;justify-content:center}
+  .btn-primary{background:var(--green);color:#fff}
+  .btn-primary:hover{background:var(--green-strong)}
   .btn-ghost{background:var(--surface);border-color:var(--hairline);color:var(--ink)}
-  .btn-ghost:hover{background:var(--primary-tint)}
+  .btn-ghost:hover{border-color:var(--green)}
+  .btn-honey{background:var(--honey);color:#fff}
   .btn-danger{background:var(--warn);color:#fff}
   .btn-warnghost{background:var(--surface);border-color:var(--warn);color:var(--warn-strong)}
+  .note{background:var(--green-tint);border:1px dashed var(--green);border-radius:var(--r-sm);padding:13px 16px;color:var(--ink);font-size:.95rem;margin-top:16px}
 
-  /* reply */
-  .reply{padding:20px;display:flex;flex-direction:column;gap:16px}
-  .sugg-label{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-weight:600;font-size:.95rem}
-  .sugg{
-    background:var(--primary-tint);border:1px dashed var(--primary);border-radius:var(--r-md);
-    padding:18px;font-size:1.2rem;line-height:1.55;color:var(--ink);
-  }
-  .reply textarea{
-    width:100%;font-family:var(--sans);font-size:1.15rem;line-height:1.55;padding:16px;border-radius:var(--r-md);
-    border:1px solid var(--hairline);background:var(--surface);color:var(--ink);resize:vertical;min-height:120px;
-  }
+  /* mail flow */
+  .mlist{display:flex;flex-direction:column;gap:11px}
+  .mail{display:flex;gap:13px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:14px;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);text-align:left}
+  .mail:hover{border-color:var(--green)}
+  .mail.flag{border-color:var(--warn);background:var(--warn-tint)}
+  .av{width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:1.1rem}
+  .mail .who{font-weight:700;font-size:1.05rem}
+  .mail .subj{color:var(--ink-soft);font-size:.92rem;margin-top:1px}
+  .mail .time{margin-left:auto;color:var(--ink-soft);font-size:.8rem;flex:0 0 auto}
+  .flagchip{background:var(--warn);color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px}
+  .read{display:flex;flex-direction:column;gap:16px;max-width:640px}
+  .read h3{font-family:var(--display);font-size:1.4rem;margin:0}
+  .read .content-t{font-size:1.12rem;line-height:1.55}
+  .warncard{background:var(--warn-tint);border:2px solid var(--warn);border-radius:var(--r-sm);padding:16px 18px}
+  .warncard .h{color:var(--warn-strong);font-weight:800;font-size:1.1rem;display:flex;gap:9px;align-items:center}
+  .warncard ul{margin:8px 0 0;padding-left:20px;color:var(--warn-strong)}
+  .actions{display:flex;gap:11px;flex-wrap:wrap}
+  .actions .btn{flex:1;min-width:150px}
+  textarea{width:100%;font-family:var(--sans);font-size:1.08rem;line-height:1.5;padding:14px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--ink);min-height:110px;resize:vertical}
 
-  /* contacts */
-  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px}
-  .contact{
-    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:20px;
-    display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-soft);
-    font-family:var(--sans);color:var(--ink);
+  .backline{display:inline-flex;align-items:center;gap:8px;background:transparent;border:0;color:var(--green-strong);font-weight:700;font-family:var(--sans);font-size:1rem;cursor:pointer;padding:6px 0;margin-bottom:8px}
+
+  /* photo grid */
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+  .thumb{aspect-ratio:1;border-radius:var(--r-sm);background-size:cover;background-position:center;box-shadow:var(--shadow-soft);border:1px solid var(--hairline)}
+  .toolbar-edit{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{background:var(--surface);border:1px solid var(--hairline);border-radius:11px;padding:9px 14px;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px}
+
+  /* social buttons */
+  .social{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .sbtn{border:1px solid var(--hairline);background:var(--surface);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;font-weight:700;box-shadow:var(--shadow-soft);color:var(--ink)}
+  .sbtn:hover{transform:translateY(-2px)}
+  .sbtn .slogo{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem}
+
+  /* avis */
+  .cagnotte{background:linear-gradient(150deg,var(--honey),#a56d26);color:#fff;border-radius:var(--r);padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:var(--shadow-soft);margin-bottom:16px;flex-wrap:wrap}
+  .cagnotte .amt{font-family:var(--display);font-size:2.1rem;line-height:1}
+
+  /* media tiles */
+  .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+  .mtile{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-soft);font-weight:700;color:var(--ink)}
+  .mtile:hover{border-color:var(--green)}
+  .mtile .mem{font-size:1.8rem}
+  .mtile .md{color:var(--ink-soft);font-size:.82rem;font-weight:500}
+
+  /* ===== TV widget (bottom-right, ~6x6cm) ===== */
+  .tv{
+    position:absolute;right:20px;bottom:20px;width:150px;height:150px;border-radius:16px;overflow:hidden;
+    cursor:pointer;box-shadow:0 14px 34px -12px rgba(0,0,0,.55);border:3px solid #fff;z-index:30;
+    transition:all .28s cubic-bezier(.2,.7,.2,1);
+    background:linear-gradient(160deg,#22303a,#0f1a20);
   }
-  .contact:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-  .contact .avatar{width:72px;height:72px;font-size:1.7rem}
-  .contact .cn{font-weight:700;font-size:1.2rem}
-  .contact .cr{color:var(--ink-soft);font-size:.92rem}
+  .tv .tv-screen{position:absolute;inset:0;background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 4px),
+      radial-gradient(circle at 50% 40%, #3a6f8a 0%, #16232b 70%);}
+  .tv .live{position:absolute;top:8px;left:8px;background:var(--warn);color:#fff;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+  .tv .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.4s infinite}
+  @keyframes blink{50%{opacity:.3}}
+  .tv .ch{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;font-size:.72rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .tv .hint{position:absolute;bottom:8px;right:8px;color:rgba(255,255,255,.7);font-size:.6rem}
+  .tv.full{right:3%;bottom:3%;left:3%;top:3%;width:auto;height:auto;border-radius:20px}
+  .tv.full .ch{font-size:1.3rem;bottom:20px;left:20px}
+  .tv.full .live{font-size:.85rem;padding:4px 11px;top:16px;left:16px}
+  .tv .exit{position:absolute;top:10px;right:12px;color:#fff;font-size:1.1rem;font-weight:700;display:none;background:rgba(0,0,0,.35);border-radius:8px;padding:2px 9px}
+  .tv.full .exit{display:block}
+  .tv .hint{display:block}
+  .tv.full .hint{display:none}
 
   /* toast + modal */
-  .toast{
-    position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
-    background:var(--ink);color:var(--app-bg);padding:14px 22px;border-radius:14px;font-weight:600;font-size:1.02rem;
-    opacity:0;pointer-events:none;transition:.25s;display:flex;align-items:center;gap:10px;max-width:90%;text-align:center;
-    box-shadow:var(--shadow);z-index:40;
-  }
+  .toast{position:absolute;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--screen);padding:13px 20px;border-radius:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:var(--shadow);max-width:80%;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .modal{
-    position:absolute;inset:0;background:rgba(20,15,8,.5);display:none;align-items:center;justify-content:center;
-    padding:24px;z-index:50;
-  }
+  .modal{position:absolute;inset:0;background:rgba(20,15,8,.5);display:none;align-items:center;justify-content:center;padding:24px;z-index:70}
   .modal.show{display:flex}
-  .card{
-    background:var(--surface);border-radius:24px;padding:26px;max-width:400px;width:100%;box-shadow:var(--shadow);
-    display:flex;flex-direction:column;gap:14px;text-align:center;
-  }
-  .card h4{font-family:var(--display);font-size:1.5rem;margin:0}
-  .card p{margin:0;color:var(--ink-soft);font-size:1.05rem}
-  .card .row{display:flex;gap:12px;margin-top:6px}
+  .modal .card2{background:var(--surface);border-radius:22px;padding:26px;max-width:400px;width:100%;text-align:center;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+  .modal h4{font-family:var(--display);font-size:1.4rem;margin:0}
+  .modal p{margin:0;color:var(--ink-soft)}
+  .modal .row{display:flex;gap:12px;margin-top:4px}
+  .modal .row .btn{flex:1}
 
-  /* ============ CAREGIVER / FAMILY ============ */
-  .console{
-    width:100%;max-width:860px;background:var(--surface);border:1px solid var(--hairline);border-radius:26px;
-    box-shadow:var(--shadow);overflow:hidden;display:none;
-  }
-  .console.active{display:block}
-  .console .chead{
-    padding:24px 28px;border-bottom:1px solid var(--hairline);
-    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
-    background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 8%,var(--surface)),var(--surface));
-  }
-  .chead .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:700;color:var(--primary)}
-  .chead h2{margin:4px 0 0;font-family:var(--display);font-size:1.55rem}
-  .cbody{padding:26px 28px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-  @media (max-width:680px){.cbody{grid-template-columns:1fr}}
-  .panel h3{font-size:1.05rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
-  .panel .hint{color:var(--ink-soft);font-size:.9rem;margin:0 0 14px}
-
-  .provider{
-    display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--hairline);
-    border-radius:14px;margin-bottom:10px;background:var(--app-bg);
-  }
-  .plogo{width:40px;height:40px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1rem}
-  .provider .pn{font-weight:700}
-  .provider .pd{color:var(--ink-soft);font-size:.85rem}
-  .provider .pstate{margin-left:auto;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
-  .pstate.on{color:var(--safe)}
-  .btn-sm{border:1px solid var(--primary);background:transparent;color:var(--primary);font-weight:700;
-    padding:8px 14px;border-radius:10px;cursor:pointer;font-family:var(--sans);font-size:.9rem;margin-left:auto}
-  .btn-sm:hover{background:var(--primary-tint)}
-
-  .feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-  .feed li{display:flex;gap:12px;padding:13px 14px;border:1px solid var(--hairline);border-radius:13px;background:var(--app-bg);align-items:flex-start}
-  .feed .dotk{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:0 0 auto}
-  .feed .k-warn{background:var(--warn)}
-  .feed .k-ok{background:var(--safe)}
-  .feed .k-info{background:var(--primary)}
-  .feed .ft{font-weight:600}
-  .feed .fm{color:var(--ink-soft);font-size:.88rem;margin-top:2px}
-  .feed .fw{margin-left:auto;color:var(--ink-soft);font-size:.78rem;flex:0 0 auto}
-  .statline{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}
-  .stat{flex:1;min-width:120px;background:var(--app-bg);border:1px solid var(--hairline);border-radius:14px;padding:14px 16px}
-  .stat .n{font-size:1.7rem;font-weight:800;font-variant-numeric:tabular-nums}
-  .stat .l{color:var(--ink-soft);font-size:.82rem}
-
-  :focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:6px}
-  .caption{color:var(--ink-soft);font-size:.85rem;text-align:center;max-width:520px;text-wrap:balance}
+  :focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:8px}
 </style>
 
-<div class="stage">
-  <div class="toolbar">
-    <div class="seg" role="tablist" aria-label="Vue">
-      <button id="tab-senior" aria-pressed="true" onclick="setView('senior')">👵 Écran de la personne</button>
-      <button id="tab-family" aria-pressed="false" onclick="setView('family')">👨‍👩‍👧 Espace famille</button>
+<div class="frame">
+  <div class="os">
+
+    <!-- TOP BAR (persistent) -->
+    <div class="topbar">
+      <button class="pastille" onclick="home()" aria-label="Revenir à l'accueil" title="Accueil">XMO</button>
+      <div class="avatar-home" aria-hidden="true">J</div>
+      <div class="whoami">
+        <span class="hi">Bonjour Jacqueline</span>
+        <span class="dt">Mardi 6 juillet · 14 h 20</span>
+      </div>
+      <span class="spacer"></span>
+      <span class="top-pill">🛡️ Protégé par la famille</span>
     </div>
-  </div>
-  <p class="caption" id="viewnote">Maquette cliquable — l'écran vu par la personne âgée. Tout est en très gros, calme, et chaque envoi demande une confirmation.</p>
 
-  <!-- ===================== SENIOR DEVICE ===================== -->
-  <div class="device" id="device">
+    <!-- CONTENT -->
+    <div class="content" id="content">
 
-    <!-- HOME -->
-    <section class="screen active" id="s-home">
-      <div class="topbar">
-        <span class="shield">🛡️ Protégé par votre famille</span>
-        <h1 class="greet">Bonjour Jacqueline<small>Mardi 6 juillet · 14 h 20</small></h1>
-      </div>
-      <div class="body">
-        <div class="tiles">
-          <button class="tile" onclick="go('s-mail')">
-            <span class="ic">📬</span>
-            <span class="badge">2 nouveaux</span>
-            <span class="lab">Mes messages</span>
-            <span class="sub">Sophie vous a écrit</span>
-          </button>
-          <button class="tile" onclick="go('s-agenda')">
-            <span class="ic">📅</span>
-            <span class="badge ok">Aujourd'hui</span>
-            <span class="lab">Mon agenda</span>
-            <span class="sub">Rien de prévu cet après-midi</span>
-          </button>
-          <button class="tile" onclick="go('s-write')">
-            <span class="ic">✉️</span>
-            <span class="lab">Écrire à un proche</span>
-            <span class="sub">Sophie, Marc, le docteur…</span>
-          </button>
-          <button class="tile" onclick="toast('Bientôt disponible 🙂')">
-            <span class="ic">🖼️</span>
-            <span class="lab">Mes photos</span>
-            <span class="sub">La famille en a ajouté 4</span>
-          </button>
+      <!-- HOME : les univers -->
+      <section class="universe active" id="u-home">
+        <div class="home-grid">
+          <button class="uni" onclick="openU('u-pros')"><span class="em">📁</span><span class="nm">Mes dossiers pros</span><span class="ds">Factures, clients, contrats…</span></button>
+          <button class="uni" onclick="openU('u-perso')"><span class="em">🏠</span><span class="nm">Mes dossiers perso</span><span class="ds">Santé, maison, impôts, famille</span></button>
+          <button class="uni" onclick="openU('u-drafts')"><span class="count">7 à ranger</span><span class="em">🗂️</span><span class="nm">Mes brouillons</span><span class="ds">Documents à classer</span></button>
+          <button class="uni accent" onclick="openU('u-mail')"><span class="em">📬</span><span class="nm">Mes boîtes mails</span><span class="ds">Toutes vos adresses, protégées</span></button>
+          <button class="uni" onclick="openU('u-photopro')"><span class="em">🎬</span><span class="nm">Photos & vidéos pros</span><span class="ds">Retouche, filtres, montage</span></button>
+          <button class="uni" onclick="openU('u-photoperso')"><span class="em">📸</span><span class="nm">Photos & vidéos perso</span><span class="ds">Vos souvenirs de famille</span></button>
+          <button class="uni" onclick="openU('u-social')"><span class="em">🌐</span><span class="nm">Mes réseaux sociaux</span><span class="ds">Publier en un clic</span></button>
+          <button class="uni" onclick="openU('u-media')"><span class="em">📺</span><span class="nm">Mes médias</span><span class="ds">TV, radio, musique, presse</span></button>
+          <button class="uni" onclick="openU('u-avis')"><span class="em">⭐</span><span class="nm">Mes avis</span><span class="ds">Donnez votre avis, gagnez</span></button>
         </div>
-      </div>
-    </section>
+        <div class="note">👆 Cliquez un univers pour l'ouvrir. La <strong>pastille XMO</strong> en haut à gauche vous ramène toujours ici. La <strong>télé</strong>, en bas à droite, s'agrandit d'un clic.</div>
+      </section>
 
-    <!-- MAIL LIST -->
-    <section class="screen" id="s-mail">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
-        <h2>Mes messages</h2>
-      </div>
-      <div class="mlist" id="mlist"></div>
-    </section>
+      <!-- MAIL -->
+      <section class="universe" id="u-mail">
+        <div class="u-title"><span class="em">📬</span><h2>Mes boîtes mails</h2></div>
+        <p class="u-sub">Gmail, Outlook, Yahoo, iCloud, Orange… tout est réuni ici. Vous ne voyez jamais le fournisseur, juste vos messages.</p>
+        <div id="mailview"></div>
+      </section>
 
-    <!-- READ -->
-    <section class="screen" id="s-read">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-mail')">← Messages</button>
-        <h2>Message</h2>
-      </div>
-      <div class="read" id="readbox"></div>
-    </section>
+      <!-- DRAFTS -->
+      <section class="universe" id="u-drafts">
+        <div class="u-title"><span class="em">🗂️</span><h2>Mes brouillons</h2></div>
+        <p class="u-sub">Tous les documents créés et laissés en l'état. Rangez-les tranquillement, un par un.</p>
+        <div class="cards" id="draftcards"></div>
+      </section>
 
-    <!-- REPLY -->
-    <section class="screen" id="s-reply">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-read')">← Retour</button>
-        <h2 id="reply-h">Répondre</h2>
-      </div>
-      <div class="reply">
-        <div class="sugg-label">✨ Réponse proposée — vous pouvez la modifier</div>
-        <textarea id="reply-text" aria-label="Votre réponse"></textarea>
-        <div class="actions">
-          <button class="btn btn-ghost" onclick="speak(document.getElementById('reply-text').value)">🔊 Écouter</button>
-          <button class="btn btn-primary" id="reply-send">Envoyer ✓</button>
+      <!-- DOSSIERS PROS -->
+      <section class="universe" id="u-pros">
+        <div class="u-title"><span class="em">📁</span><h2>Mes dossiers pros</h2></div>
+        <p class="u-sub">Vos affaires professionnelles, bien rangées.</p>
+        <div class="cards">
+          <div class="card"><span class="cem">🧾</span><span class="ct">Factures</span><span class="cd">24 documents</span></div>
+          <div class="card"><span class="cem">🤝</span><span class="ct">Clients</span><span class="cd">11 dossiers</span></div>
+          <div class="card"><span class="cem">📑</span><span class="ct">Contrats</span><span class="cd">6 documents</span></div>
+          <div class="card"><span class="cem">💶</span><span class="ct">Comptabilité</span><span class="cd">Suivi 2026</span></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- AGENDA -->
-    <section class="screen" id="s-agenda">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
-        <h2>Mon agenda</h2>
-      </div>
-      <div class="read">
-        <div class="content" style="font-size:1.25rem">
-          <p style="margin-top:0"><strong>Aujourd'hui, mardi 6 juillet</strong><br>Rien de prévu cet après-midi. Profitez-en 🙂</p>
-          <div style="height:1px;background:var(--hairline);margin:18px 0"></div>
-          <p><strong>Jeudi 8 juillet · 15 h 00</strong><br>Rendez-vous chez le <strong>Docteur Martin</strong><br><span style="color:var(--ink-soft)">12 rue des Lilas — pensez à votre carte Vitale</span></p>
+      <!-- DOSSIERS PERSO -->
+      <section class="universe" id="u-perso">
+        <div class="u-title"><span class="em">🏠</span><h2>Mes dossiers perso</h2></div>
+        <p class="u-sub">Tout ce qui compte à la maison.</p>
+        <div class="cards">
+          <div class="card"><span class="cem">❤️</span><span class="ct">Santé</span><span class="cd">Ordonnances, rendez-vous</span></div>
+          <div class="card"><span class="cem">🏡</span><span class="ct">Maison</span><span class="cd">Assurances, quittances</span></div>
+          <div class="card"><span class="cem">🧮</span><span class="ct">Impôts</span><span class="cd">Avis, déclarations</span></div>
+          <div class="card"><span class="cem">👨‍👩‍👧</span><span class="ct">Famille</span><span class="cd">Papiers importants</span></div>
         </div>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="toast('Rappel activé — on vous préviendra jeudi 🔔')">🔔 Me rappeler jeudi</button>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- WRITE (contacts) -->
-    <section class="screen" id="s-write">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-home')">← Accueil</button>
-        <h2>Écrire à un proche</h2>
-      </div>
-      <div class="contacts" id="contacts"></div>
-    </section>
-
-    <!-- COMPOSE -->
-    <section class="screen" id="s-compose">
-      <div class="subhead">
-        <button class="btn-back" onclick="go('s-write')">← Retour</button>
-        <h2 id="compose-h">Écrire</h2>
-      </div>
-      <div class="reply">
-        <div class="sugg-label">Écrivez votre message, ou dictez-le</div>
-        <textarea id="compose-text" aria-label="Votre message" placeholder="Bonjour…"></textarea>
-        <div class="actions">
-          <button class="btn btn-ghost" onclick="toast('🎤 Dictée — dites votre message')">🎤 Dicter</button>
-          <button class="btn btn-primary" id="compose-send">Envoyer ✓</button>
+      <!-- PHOTOS PRO -->
+      <section class="universe" id="u-photopro">
+        <div class="u-title"><span class="em">🎬</span><h2>Ma banque photos & vidéos pros</h2></div>
+        <p class="u-sub">Avec de quoi retoucher simplement : recadrer, éclaircir, filtres.</p>
+        <div class="toolbar-edit">
+          <span class="chip">✂️ Recadrer</span><span class="chip">☀️ Éclaircir</span><span class="chip">🎨 Filtres</span><span class="chip">🎞️ Montage vidéo</span>
         </div>
-      </div>
-    </section>
+        <div class="thumbs" id="thumbspro"></div>
+      </section>
+
+      <!-- PHOTOS PERSO -->
+      <section class="universe" id="u-photoperso">
+        <div class="u-title"><span class="em">📸</span><h2>Ma banque photos & vidéos perso</h2></div>
+        <p class="u-sub">Vos souvenirs, faciles à revoir et à partager avec la famille.</p>
+        <div class="toolbar-edit">
+          <span class="chip">✂️ Recadrer</span><span class="chip">☀️ Éclaircir</span><span class="chip">🎨 Filtres</span><span class="chip">📤 Envoyer à un proche</span>
+        </div>
+        <div class="thumbs" id="thumbsperso"></div>
+      </section>
+
+      <!-- SOCIAL -->
+      <section class="universe" id="u-social">
+        <div class="u-title"><span class="em">🌐</span><h2>Mes réseaux sociaux</h2></div>
+        <p class="u-sub">Accès direct à chaque réseau — et une caméra pour publier une photo ou une vidéo en un clic.</p>
+        <div style="margin-bottom:18px">
+          <button class="btn btn-honey" style="font-size:1.1rem;padding:16px 24px" onclick="toast('🎥 Caméra activée — filmez, puis choisissez où publier')">🎥 Filmer et publier maintenant</button>
+        </div>
+        <div class="social">
+          <button class="sbtn" onclick="toast('Ouverture de Facebook…')"><span class="slogo" style="background:#1877F2">f</span>Facebook</button>
+          <button class="sbtn" onclick="toast('Ouverture d\'Instagram…')"><span class="slogo" style="background:linear-gradient(45deg,#E1306C,#F77737)">◎</span>Instagram</button>
+          <button class="sbtn" onclick="toast('Ouverture de WhatsApp…')"><span class="slogo" style="background:#25D366">✆</span>WhatsApp</button>
+          <button class="sbtn" onclick="toast('Ouverture de YouTube…')"><span class="slogo" style="background:#FF0000">▶</span>YouTube</button>
+        </div>
+      </section>
+
+      <!-- MEDIA -->
+      <section class="universe" id="u-media">
+        <div class="u-title"><span class="em">📺</span><h2>Mes médias</h2></div>
+        <p class="u-sub">Tout ce qui se regarde et s'écoute — et ça tourne dans la télé en bas à droite. Cliquez la télé pour l'agrandir.</p>
+        <div class="media-grid">
+          <button class="mtile" onclick="tvChannel('France 2 · en direct')"><span class="mem">📺</span>Chaînes TV<span class="md">TNT en direct</span></button>
+          <button class="mtile" onclick="tvChannel('France Inter · radio')"><span class="mem">📻</span>Radio<span class="md">Toutes les stations</span></button>
+          <button class="mtile" onclick="tvChannel('Deezer · playlist')"><span class="mem">🎵</span>Deezer<span class="md">Musique</span></button>
+          <button class="mtile" onclick="tvChannel('Apple Music')"><span class="mem">🍎</span>Apple Music<span class="md">Musique</span></button>
+          <button class="mtile" onclick="tvChannel('La Presse du jour')"><span class="mem">📰</span>Presse<span class="md">Articles du jour</span></button>
+          <button class="mtile" onclick="tvChannel('YouTube')"><span class="mem">▶️</span>YouTube<span class="md">Vidéos</span></button>
+        </div>
+      </section>
+
+      <!-- AVIS -->
+      <section class="universe" id="u-avis">
+        <div class="u-title"><span class="em">⭐</span><h2>Mes avis</h2></div>
+        <p class="u-sub">Donnez votre avis sur des pubs, des sujets, des questions — et gagnez une petite cagnotte à reverser où vous voulez.</p>
+        <div class="cagnotte">
+          <div><div style="font-size:.85rem;opacity:.9">Votre cagnotte du mois</div><div class="amt">8,40 €</div></div>
+          <button class="btn" style="background:#fff;color:#a56d26" onclick="toast('Choisissez une association ou un achat partenaire')">Utiliser ma cagnotte</button>
+        </div>
+        <div class="cards">
+          <div class="card"><span class="cem">🎬</span><span class="ct">Donnez votre avis</span><span class="cd">Une pub de 20 s · +0,30 €</span><button class="btn btn-primary" style="margin-top:8px" onclick="toast('Merci ! +0,30 € ajoutés à votre cagnotte')">Regarder & noter</button></div>
+          <div class="card"><span class="cem">🗳️</span><span class="ct">Question du jour</span><span class="cd">« Utilisez-vous le paiement sans contact ? »</span><button class="btn btn-ghost" style="margin-top:8px" onclick="toast('Réponse enregistrée · +0,10 €')">Répondre</button></div>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+
+    <!-- TV widget -->
+    <div class="tv" id="tv" onclick="toggleTv()" role="button" aria-label="Télévision — cliquer pour agrandir">
+      <div class="tv-screen"></div>
+      <span class="live">● DIRECT</span>
+      <span class="exit" aria-hidden="true">✕</span>
+      <span class="ch" id="tvch">France 2 · en direct</span>
+      <span class="hint">cliquer pour agrandir</span>
+    </div>
 
     <div class="toast" id="toast"></div>
-
     <div class="modal" id="modal">
-      <div class="card">
-        <h4 id="m-title">Envoyer ce message&nbsp;?</h4>
+      <div class="card2">
+        <h4>Envoyer ce message ?</h4>
         <p id="m-text"></p>
         <div class="row">
           <button class="btn btn-ghost" onclick="closeModal()">Non, annuler</button>
@@ -375,224 +339,109 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ===================== FAMILY CONSOLE ===================== -->
-  <div class="console" id="console">
-    <div class="chead">
-      <div>
-        <div class="eyebrow">Espace famille</div>
-        <h2>Le compte de Jacqueline</h2>
-      </div>
-      <span class="pstate on" style="font-weight:700">🛡️ Protection active</span>
-    </div>
-    <div class="cbody">
-      <div class="panel">
-        <h3>📥 Boîtes mail connectées</h3>
-        <p class="hint">Vous connectez les comptes une fois, depuis chez vous. Jacqueline n'a rien à faire. Tous les fournisseurs sont pris en charge.</p>
-
-        <div class="provider">
-          <span class="plogo" style="background:#D64B3F">M</span>
-          <div><div class="pn">Gmail</div><div class="pd">jacqueline.d@gmail.com</div></div>
-          <span class="pstate on">✓ Connecté</span>
-        </div>
-        <div class="provider">
-          <span class="plogo" style="background:#0A6FC2">O</span>
-          <div><div class="pn">Outlook / Hotmail</div><div class="pd">jacqueline@hotmail.fr</div></div>
-          <span class="pstate on">✓ Connecté</span>
-        </div>
-        <div class="provider">
-          <span class="plogo" style="background:#6B4FA0">Y</span>
-          <div><div class="pn">Yahoo Mail</div><div class="pd">Non connecté</div></div>
-          <button class="btn-sm" onclick="fToast('Connexion Yahoo…')">Connecter</button>
-        </div>
-        <div class="provider">
-          <span class="plogo" style="background:#4B5563">i</span>
-          <div><div class="pn">iCloud (Apple)</div><div class="pd">Non connecté</div></div>
-          <button class="btn-sm" onclick="fToast('Connexion iCloud…')">Connecter</button>
-        </div>
-        <div class="provider">
-          <span class="plogo" style="background:var(--gold)">@</span>
-          <div><div class="pn">Autre (Orange, SFR, Free…)</div><div class="pd">Compte IMAP / adresse du fournisseur</div></div>
-          <button class="btn-sm" onclick="fToast('Ajout d\'une boîte IMAP…')">Ajouter</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>🛡️ Le bouclier — activité récente</h3>
-        <p class="hint">Vous êtes prévenu·e des messages suspects et des envois. Rien d'inquiétant côté Jacqueline : elle voit juste « message suspect, ne répondez pas ».</p>
-        <div class="statline">
-          <div class="stat"><div class="n" style="color:var(--warn)">3</div><div class="l">Arnaques bloquées (7 j)</div></div>
-          <div class="stat"><div class="n" style="color:var(--safe)">12</div><div class="l">Messages lus</div></div>
-          <div class="stat"><div class="n">4</div><div class="l">Réponses envoyées</div></div>
-        </div>
-        <ul class="feed">
-          <li><span class="dotk k-warn"></span><div><div class="ft">Arnaque « EDF » bloquée</div><div class="fm">Faux avis de suspension + demande de RIB. Signalée, Jacqueline avertie.</div></div><span class="fw">09:12</span></li>
-          <li><span class="dotk k-ok"></span><div><div class="ft">Réponse envoyée à Sophie</div><div class="fm">« Avec plaisir, je vous attends dimanche »</div></div><span class="fw">Hier</span></li>
-          <li><span class="dotk k-warn"></span><div><div class="ft">Faux SMS colis bloqué</div><div class="fm">Lien frauduleux La Poste</div></div><span class="fw">Lun.</span></li>
-          <li><span class="dotk k-info"></span><div><div class="ft">Rappel médecin ajouté</div><div class="fm">Dr Martin — jeudi 15 h</div></div><span class="fw">Lun.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="toast" id="ftoast" style="position:fixed"></div>
   </div>
 </div>
 
 <script>
-  // ---------- data ----------
-  const MAILS = {
-    sophie:{who:'Sophie', role:'votre fille', color:'#C2557A', addr:'sophie.d@gmail.com', time:'11:40', new:true,
+  /* ---------- universe nav ---------- */
+  function openU(id){
+    document.querySelectorAll('.universe').forEach(u=>u.classList.toggle('active',u.id===id));
+    document.getElementById('content').scrollTop=0;
+    if(id==='u-mail') renderMailList();
+    if(id==='u-drafts') renderDrafts();
+    if(id==='u-photopro') renderThumbs('thumbspro','pro');
+    if(id==='u-photoperso') renderThumbs('thumbsperso','perso');
+  }
+  function home(){ openU('u-home'); }
+
+  /* ---------- TV ---------- */
+  function toggleTv(){ document.getElementById('tv').classList.toggle('full'); }
+  function tvChannel(name){ document.getElementById('tvch').textContent=name; toast('▶ '+name+' — la télé est en bas à droite'); }
+
+  /* ---------- mail data ---------- */
+  const MAILS={
+    sophie:{who:'Sophie · votre fille',color:'#C2557A',addr:'sophie.d@gmail.com',time:'11:40',
       subj:'Coucou maman, on vient dimanche !',
-      body:"Coucou maman,\n\nJust pour te dire qu'on passe dimanche midi avec les enfants. Léo a hâte de te montrer son vélo !\n\nTu veux qu'on apporte le dessert ? Je t'embrasse fort.\nSophie",
-      scam:false,
-      reply:"Avec plaisir ma chérie, je vous attends dimanche midi. Ne t'occupe pas du dessert, je prépare une tarte. Grosses bises à Léo et aux enfants.\nMaman ❤️"},
-    medecin:{who:'Cabinet du Dr Martin', role:'', color:'#2E7D4F', addr:'secretariat@cabinet-martin.fr', time:'09:05', new:true,
-      subj:'Rappel de votre rendez-vous — jeudi 15 h',
-      body:"Bonjour Madame,\n\nNous vous rappelons votre rendez-vous avec le Docteur Martin le jeudi 8 juillet à 15 h 00.\n\nMerci de venir avec votre carte Vitale.\nLe secrétariat",
-      scam:false,
-      reply:"Bonjour, c'est bien noté pour jeudi 15 h. Je serai présente avec ma carte Vitale. Merci à vous.\nJacqueline"},
-    edf:{who:'Service EDF', role:'', color:'#B23A26', addr:'no-reply@edf-facture-secure.net', time:'08:47', new:false,
+      body:"Coucou maman,\n\nOn passe dimanche midi avec les enfants. Léo a hâte de te montrer son vélo !\nTu veux qu'on apporte le dessert ? Je t'embrasse fort.\nSophie",
+      scam:false,reply:"Avec plaisir ma chérie, je vous attends dimanche midi. Ne t'occupe pas du dessert, je fais une tarte. Bises à Léo.\nMaman ❤️"},
+    edf:{who:'Service EDF',color:'#B23A26',addr:'no-reply@edf-facture-secure.net',time:'08:47',
       subj:'URGENT : votre compte va être suspendu',
-      body:"Cher client,\n\nVotre dernière facture n'a pas pu être prélevée. Sans régularisation sous 24 h, votre électricité sera COUPÉE.\n\nCliquez ici pour mettre à jour vos coordonnées bancaires : http://edf-facture-secure.net/paiement\n\nService recouvrement",
+      body:"Votre facture n'a pas pu être prélevée. Sans régularisation sous 24 h, votre électricité sera COUPÉE.\nCliquez ici pour mettre à jour vos coordonnées bancaires : http://edf-facture-secure.net/paiement",
       scam:true},
   };
-  const MAIL_ORDER = ['sophie','medecin','edf'];
-
-  const CONTACTS = [
-    {who:'Sophie', role:'votre fille', color:'#C2557A', reply:"Bonjour ma chérie, "},
-    {who:'Marc', role:'votre fils', color:'#1E6091', reply:"Bonjour Marc, "},
-    {who:'Docteur Martin', role:'votre médecin', color:'#2E7D4F', reply:"Bonjour Docteur, "},
-    {who:'Pharmacie des Lilas', role:'', color:'#B67A2E', reply:"Bonjour, "},
-  ];
-
-  const initials = n => n.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
-
-  // ---------- navigation ----------
-  function go(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
-    if(id==='s-mail') renderMail();
-    if(id==='s-write') renderContacts();
-    document.getElementById('device').scrollTop=0;
-  }
-  function setView(v){
-    const senior=v==='senior';
-    document.getElementById('device').style.display=senior?'flex':'none';
-    document.getElementById('console').classList.toggle('active',!senior);
-    document.getElementById('tab-senior').setAttribute('aria-pressed',senior);
-    document.getElementById('tab-family').setAttribute('aria-pressed',!senior);
-    document.getElementById('viewnote').textContent = senior
-      ? "Maquette cliquable — l'écran vu par la personne âgée. Tout est en très gros, calme, et chaque envoi demande une confirmation."
-      : "L'espace de l'aidant (l'enfant adulte) — il connecte les boîtes mail de tous les fournisseurs et surveille le bouclier anti-arnaque.";
-  }
-
-  // ---------- render mail list ----------
-  function renderMail(){
+  const initials=n=>n.split(/[ ·]/).filter(Boolean).slice(0,1).map(w=>w[0]).join('').toUpperCase();
+  function renderMailList(){
+    document.getElementById('mailview').innerHTML='<div class="mlist" id="mlist"></div>';
     const box=document.getElementById('mlist'); box.innerHTML='';
-    MAIL_ORDER.forEach(k=>{
-      const m=MAILS[k];
-      const el=document.createElement('button');
-      el.className='mail'+(m.scam?' flag':'');
-      el.onclick=()=>openMail(k);
-      el.innerHTML=`
-        <div class="avatar" style="background:${m.color}">${m.scam?'⚠️':initials(m.who)}</div>
-        <div style="flex:1;min-width:0">
-          <div class="who">${m.who}${m.role?` <span style="color:var(--ink-soft);font-weight:500;font-size:.95rem">· ${m.role}</span>`:''}
-            ${m.scam?'<span class="flagchip">SUSPECT</span>':''}</div>
-          <div class="subj">${m.subj}</div>
-        </div>
-        ${m.new&&!m.scam?'<span class="newdot" aria-label="nouveau"></span>':''}
+    Object.keys(MAILS).forEach(k=>{const m=MAILS[k];
+      const el=document.createElement('button'); el.className='mail'+(m.scam?' flag':''); el.onclick=()=>openMail(k);
+      el.innerHTML=`<div class="av" style="background:${m.color}">${m.scam?'⚠️':initials(m.who)}</div>
+        <div style="flex:1;min-width:0"><div class="who">${m.who}${m.scam?'<span class="flagchip">SUSPECT</span>':''}</div><div class="subj">${m.subj}</div></div>
         <span class="time">${m.time}</span>`;
-      box.appendChild(el);
-    });
+      box.appendChild(el);});
   }
-
-  // ---------- open a mail ----------
   function openMail(k){
-    const m=MAILS[k]; const box=document.getElementById('readbox');
+    const m=MAILS[k]; let html='<button class="backline" onclick="renderMailList()">← Mes messages</button><div class="read">';
     if(m.scam){
-      box.innerHTML=`
-        <div class="warncard">
-          <div class="h">⚠️ Message suspect — ne répondez pas</div>
-          <div style="color:var(--warn-strong);font-weight:600">Ce message essaie de vous faire peur pour voler vos informations bancaires. Ce n'est pas le vrai EDF.</div>
-          <ul>
-            <li>L'adresse (<em>edf-facture-secure.net</em>) n'est pas celle d'EDF.</li>
-            <li>Il vous menace d'une coupure en 24 h pour vous presser.</li>
-            <li>Il demande vos coordonnées bancaires par un lien.</li>
-          </ul>
-        </div>
-        <div class="from"><div class="avatar" style="background:${m.color}">⚠️</div>
-          <div><div class="who">${m.who}</div><div class="addr">${m.addr}</div></div></div>
-        <h3>${m.subj}</h3>
-        <div class="content" style="color:var(--ink-soft)">${m.body.replace(/\n/g,'<br>')}</div>
-        <div class="actions">
-          <button class="btn btn-danger" onclick="toast('Message supprimé et signalé ✓');go('s-mail')">🗑️ Supprimer</button>
-          <button class="btn btn-warnghost" onclick="toast('Votre fils Marc a été prévenu 🛡️')">Prévenir ma famille</button>
-        </div>`;
+      html+=`<div class="warncard"><div class="h">⚠️ Message suspect — ne répondez pas</div>
+        <div style="color:var(--warn-strong);margin-top:6px">Ce faux « EDF » veut vous faire peur pour voler vos informations bancaires.</div>
+        <ul><li>L'adresse (edf-facture-secure.net) n'est pas celle d'EDF.</li><li>Il menace d'une coupure en 24 h.</li><li>Il réclame vos coordonnées bancaires.</li></ul></div>
+        <h3>${m.subj}</h3><div class="content-t" style="color:var(--ink-soft)">${m.body.replace(/\n/g,'<br>')}</div>
+        <div class="actions"><button class="btn btn-danger" onclick="toast('Supprimé et signalé ✓');renderMailList()">🗑️ Supprimer</button>
+        <button class="btn btn-warnghost" onclick="toast('Votre fils Marc a été prévenu 🛡️')">Prévenir ma famille</button></div>`;
     } else {
-      box.innerHTML=`
-        <div class="from"><div class="avatar" style="background:${m.color}">${initials(m.who)}</div>
-          <div><div class="who">${m.who}${m.role?` · ${m.role}`:''}</div><div class="addr">${m.addr}</div></div></div>
-        <h3>${m.subj}</h3>
-        <div class="content">${m.body.replace(/\n/g,'<br>')}</div>
-        <div class="actions">
-          <button class="btn btn-ghost" onclick="speak(${JSON.stringify(m.body).replace(/"/g,'&quot;')})">🔊 Lire à voix haute</button>
-          <button class="btn btn-primary" onclick="openReply('${k}')">↩︎ Répondre</button>
-        </div>`;
+      html+=`<div style="display:flex;gap:12px;align-items:center"><div class="av" style="background:${m.color}">${initials(m.who)}</div>
+        <div><div class="who">${m.who}</div><div class="subj">${m.addr}</div></div></div>
+        <h3>${m.subj}</h3><div class="content-t">${m.body.replace(/\n/g,'<br>')}</div>
+        <div class="actions"><button class="btn btn-ghost" onclick="speak(${JSON.stringify(m.body).replace(/"/g,'&quot;')})">🔊 Lire à voix haute</button>
+        <button class="btn btn-primary" onclick="openReply('${k}')">↩︎ Répondre</button></div>`;
     }
-    go('s-read');
+    html+='</div>'; document.getElementById('mailview').innerHTML=html;
   }
-
-  // ---------- reply ----------
   function openReply(k){
     const m=MAILS[k];
-    document.getElementById('reply-h').textContent='Répondre à '+m.who;
-    document.getElementById('reply-text').value=m.reply||'';
-    document.getElementById('reply-send').onclick=()=>confirmSend(m.who);
-    go('s-reply');
+    document.getElementById('mailview').innerHTML=`<button class="backline" onclick="openMail('${k}')">← Retour</button>
+      <div class="read"><div style="color:var(--ink-soft);font-weight:600">✨ Réponse proposée — vous pouvez la modifier</div>
+      <textarea id="rt">${m.reply}</textarea>
+      <div class="actions"><button class="btn btn-ghost" onclick="speak(document.getElementById('rt').value)">🔊 Écouter</button>
+      <button class="btn btn-primary" onclick="confirmSend('${m.who.split(' ')[0]}')">Envoyer ✓</button></div></div>`;
   }
 
-  // ---------- contacts / compose ----------
-  function renderContacts(){
-    const box=document.getElementById('contacts'); box.innerHTML='';
-    CONTACTS.forEach(c=>{
-      const el=document.createElement('button');
-      el.className='contact'; el.onclick=()=>openCompose(c);
-      el.innerHTML=`<div class="avatar" style="background:${c.color}">${initials(c.who)}</div>
-        <div class="cn">${c.who}</div>${c.role?`<div class="cr">${c.role}</div>`:''}`;
-      box.appendChild(el);
-    });
-  }
-  function openCompose(c){
-    document.getElementById('compose-h').textContent='Écrire à '+c.who;
-    document.getElementById('compose-text').value=c.reply||'';
-    document.getElementById('compose-send').onclick=()=>confirmSend(c.who);
-    go('s-compose');
+  /* ---------- drafts ---------- */
+  const DRAFTS=[
+    {em:'📄',t:'Lettre au notaire.docx',d:'Créé hier'},
+    {em:'📊',t:'Budget vacances.xlsx',d:'Créé lundi'},
+    {em:'📄',t:'Compte-rendu médecin.docx',d:'Il y a 3 jours'},
+    {em:'🖼️',t:'Scan carte grise.jpg',d:'La semaine dernière'},
+    {em:'📄',t:'Mot pour la mairie.docx',d:'La semaine dernière'},
+    {em:'📊',t:'Liste invités.xlsx',d:'La semaine dernière'},
+    {em:'📄',t:'Brouillon assurance.docx',d:'Il y a 2 semaines'},
+  ];
+  function renderDrafts(){
+    const box=document.getElementById('draftcards'); box.innerHTML='';
+    DRAFTS.forEach((d,i)=>{const el=document.createElement('div'); el.className='card';
+      el.innerHTML=`<span class="cem">${d.em}</span><span class="ct">${d.t}</span><span class="cd">${d.d}</span>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="toast('Où ranger « ${d.t} » ? Pros ou Perso ?')">Ranger</button>`;
+      box.appendChild(el);});
   }
 
-  // ---------- confirm modal ----------
+  /* ---------- photo thumbs ---------- */
+  function renderThumbs(id,kind){
+    const box=document.getElementById(id); if(box.childElementCount) return; box.innerHTML='';
+    const hues = kind==='pro'?[168,150,190,205,140,175]:[20,340,300,45,10,280];
+    hues.concat(hues).slice(0,10).forEach((h,i)=>{const t=document.createElement('div'); t.className='thumb';
+      t.style.background=`linear-gradient(${i*40}deg, hsl(${h} 45% 62%), hsl(${(h+40)%360} 40% 48%))`;
+      box.appendChild(t);});
+  }
+
+  /* ---------- confirm / toast / speech ---------- */
   function confirmSend(name){
-    document.getElementById('m-title').textContent='Envoyer ce message ?';
     document.getElementById('m-text').textContent='Le message sera envoyé à '+name+'.';
-    document.getElementById('m-ok').onclick=()=>{closeModal();toast('Message envoyé à '+name+' ✓');go('s-home');};
+    document.getElementById('m-ok').onclick=()=>{closeModal();toast('Message envoyé à '+name+' ✓');home();};
     document.getElementById('modal').classList.add('show');
   }
   function closeModal(){document.getElementById('modal').classList.remove('show');}
-
-  // ---------- toast + speech ----------
-  let tT;
-  function toast(msg){
-    const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-    clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('show'),2600);
-  }
-  let fT;
-  function fToast(msg){
-    const t=document.getElementById('ftoast'); t.textContent=msg; t.classList.add('show');
-    clearTimeout(fT); fT=setTimeout(()=>t.classList.remove('show'),2400);
-  }
-  function speak(text){
-    if('speechSynthesis' in window){
-      const u=new SpeechSynthesisUtterance(text); u.lang='fr-FR'; u.rate=.95;
-      speechSynthesis.cancel(); speechSynthesis.speak(u); toast('🔊 Lecture en cours…');
-    } else { toast('La lecture vocale sera disponible dans l\'app'); }
-  }
+  let tT; function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2600);}
+  function speak(text){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(text);u.lang='fr-FR';u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u);toast('🔊 Lecture en cours…');}else{toast('Lecture vocale bientôt disponible');}}
 </script>
