@@ -1,0 +1,296 @@
+<title>XMO — Analyse technique de faisabilité</title>
+<style>
+  :root{
+    --page:#F7F4EE; --surface:#FFFFFF; --ink:#1E241E; --ink-soft:#5A5A50;
+    --hairline:#E2DCCD; --green:#2F7D63; --green-strong:#215B48; --green-tint:#E4F0EA;
+    --honey:#C98A3C; --honey-tint:#F6ECDA;
+    --warn:#B23A26; --warn-tint:#F8E7E1;
+    --amber:#9A6B15; --amber-tint:#F5EBD4;
+    --r:16px;
+    --shadow:0 8px 24px -14px rgba(30,40,28,.35);
+    --display:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --page:#20241F; --surface:#2A2F28; --ink:#EDEAE0; --ink-soft:#A8A698;
+    --hairline:#3C4238; --green:#6FB596; --green-strong:#8CCBAB; --green-tint:#2A3B33;
+    --honey:#DBA55C; --honey-tint:#3B3222;
+    --warn:#E08A76; --warn-tint:#3C2620;
+    --amber:#D9A94F; --amber-tint:#3A3120;
+    --shadow:0 8px 24px -14px rgba(0,0,0,.6);
+  }}
+  :root[data-theme="dark"]{
+    --page:#20241F; --surface:#2A2F28; --ink:#EDEAE0; --ink-soft:#A8A698;
+    --hairline:#3C4238; --green:#6FB596; --green-strong:#8CCBAB; --green-tint:#2A3B33;
+    --honey:#DBA55C; --honey-tint:#3B3222;
+    --warn:#E08A76; --warn-tint:#3C2620;
+    --amber:#D9A94F; --amber-tint:#3A3120;
+    --shadow:0 8px 24px -14px rgba(0,0,0,.6);
+  }
+  :root[data-theme="light"]{
+    --page:#F7F4EE; --surface:#FFFFFF; --ink:#1E241E; --ink-soft:#5A5A50;
+    --hairline:#E2DCCD; --green:#2F7D63; --green-strong:#215B48; --green-tint:#E4F0EA;
+    --honey:#C98A3C; --honey-tint:#F6ECDA;
+    --warn:#B23A26; --warn-tint:#F8E7E1;
+    --amber:#9A6B15; --amber-tint:#F5EBD4;
+    --shadow:0 8px 24px -14px rgba(30,40,28,.35);
+  }
+  *{box-sizing:border-box}
+  html{font-size:16.5px}
+  body{margin:0;font-family:var(--sans);background:var(--page);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1020px;margin:0 auto;padding:48px 24px 80px}
+  header .eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.7rem;font-weight:700;color:var(--honey)}
+  h1{font-family:var(--display);font-size:clamp(1.9rem,4.5vw,2.7rem);line-height:1.08;margin:8px 0 10px;text-wrap:balance}
+  .lead{color:var(--ink-soft);font-size:1.08rem;max-width:70ch;margin:0}
+  h2{font-family:var(--display);font-size:1.55rem;margin:52px 0 6px;text-wrap:balance}
+  h3{font-size:1.08rem;margin:26px 0 8px}
+  .sub{color:var(--ink-soft);margin:0 0 18px;max-width:75ch}
+  p{max-width:75ch}
+
+  .verdictbox{
+    background:var(--green-tint);border:1px solid var(--green);border-radius:var(--r);
+    padding:18px 22px;margin:26px 0 0;font-size:1.02rem;
+  }
+  .verdictbox strong{color:var(--green-strong)}
+
+  /* tables */
+  .twrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:760px;font-size:.92rem}
+  th{background:var(--surface);text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding:12px 14px;border-bottom:2px solid var(--hairline);white-space:nowrap}
+  td{padding:12px 14px;border-bottom:1px solid var(--hairline);vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  td.fn{font-weight:700;min-width:160px}
+  td.fn .v{display:block;font-weight:500;color:var(--ink-soft);font-size:.8rem;margin-top:2px}
+  .dots{font-family:var(--mono);letter-spacing:2px;white-space:nowrap}
+  .dots .on{color:var(--honey)} .dots .off{color:var(--hairline)}
+  .badge{display:inline-block;font-weight:700;font-size:.76rem;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .b-ok{background:var(--green-tint);color:var(--green-strong)}
+  .b-part{background:var(--amber-tint);color:var(--amber)}
+  .b-no{background:var(--warn-tint);color:var(--warn)}
+  .b-v1{background:var(--green);color:#fff}
+  .b-v15{background:var(--honey);color:#fff}
+  .b-v2{background:var(--amber-tint);color:var(--amber);border:1px solid var(--amber)}
+  .b-v3{background:transparent;color:var(--ink-soft);border:1px solid var(--hairline)}
+  td .c{color:var(--ink-soft);font-size:.88rem}
+  td .c b{color:var(--ink)}
+
+  /* architecture diagram */
+  .arch{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch;margin:20px 0}
+  @media(max-width:700px){.arch{grid-template-columns:1fr}.arch .link{transform:rotate(90deg);margin:-6px auto}}
+  .node{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow)}
+  .node h4{margin:0 0 8px;font-size:1rem;display:flex;gap:8px;align-items:center}
+  .node ul{margin:0;padding-left:18px;color:var(--ink-soft);font-size:.9rem}
+  .node ul li{margin:4px 0}
+  .node.cloud{border-color:var(--green)}
+  .link{display:flex;align-items:center;justify-content:center;color:var(--honey);font-weight:800;font-size:1.4rem}
+  .whynot{background:var(--honey-tint);border:1px solid var(--honey);border-radius:var(--r);padding:14px 18px;font-size:.95rem;margin:14px 0 0}
+
+  /* channel cards */
+  .channels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0}
+  @media(max-width:820px){.channels{grid-template-columns:1fr}}
+  .chan{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+  .chan.reco{border-color:var(--green);border-width:2px}
+  .chan .tag{align-self:flex-start;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:999px}
+  .chan.reco .tag{background:var(--green);color:#fff}
+  .chan:not(.reco) .tag{background:var(--hairline);color:var(--ink-soft)}
+  .chan h4{margin:2px 0 0;font-size:1.12rem}
+  .chan .facts{display:flex;flex-direction:column;gap:7px;font-size:.9rem;color:var(--ink-soft)}
+  .chan .facts b{color:var(--ink)}
+  .chan .vd{margin-top:auto;padding-top:10px;border-top:1px solid var(--hairline);font-size:.92rem}
+
+  /* walls */
+  .walls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+  @media(max-width:720px){.walls{grid-template-columns:1fr}}
+  .wall{background:var(--surface);border:1px solid var(--hairline);border-left:5px solid var(--warn);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow)}
+  .wall h4{margin:0 0 6px;font-size:1rem}
+  .wall p{margin:0;color:var(--ink-soft);font-size:.92rem}
+  .wall .fix{margin-top:10px;font-size:.9rem;background:var(--green-tint);border-radius:10px;padding:9px 12px}
+  .wall .fix b{color:var(--green-strong)}
+
+  /* timeline */
+  .tl{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .tl li{display:flex;gap:14px;align-items:baseline;background:var(--surface);border:1px solid var(--hairline);border-radius:12px;padding:12px 16px;font-size:.95rem}
+  .tl .w{font-family:var(--mono);font-weight:700;color:var(--honey);white-space:nowrap;font-size:.85rem;min-width:86px}
+  .tl .crit{color:var(--warn);font-weight:700}
+
+  footer{margin-top:56px;color:var(--ink-soft);font-size:.82rem;border-top:1px solid var(--hairline);padding-top:18px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">XMO · Annexe technique · Juillet 2026</span>
+  <h1>Analyse technique : livrer XMO en application native</h1>
+  <p class="lead">Faisabilité, difficulté et contraintes de chaque fonctionnalité, avec pour objectif une distribution <strong>Mac App Store</strong>, <strong>.dmg</strong> (Mac) et <strong>.exe</strong> (Windows).</p>
+  <div class="verdictbox">
+    <strong>Verdict en une phrase :</strong> tout est faisable, mais l'app native ne remplace pas le cloud — elle l'habille. Le canal principal recommandé est le <strong>.dmg notarié + .exe signé</strong> (liberté totale), avec le Mac App Store en <strong>second canal de confiance</strong> dans une édition conforme (sans « Mes avis » rémunérés, paiement sur le web). Le chemin critique n'est pas le code : ce sont les <strong>validations Google (Gmail)</strong>, à lancer dès la semaine 1.
+  </div>
+</header>
+
+<!-- ============ ARCHITECTURE ============ -->
+<h2>1 · Le point d'architecture qui conditionne tout</h2>
+<p class="sub">Une app installée ne peut pas contenir l'intelligence : elle contient le cockpit.</p>
+
+<div class="arch">
+  <div class="node">
+    <h4>🖥️ L'app XMO (le cockpit)</h4>
+    <ul>
+      <li>Interface univers + pastille + télé incrustée</li>
+      <li>Plein écran « kiosque », démarrage automatique</li>
+      <li>Caméra, micro, lecture à voix haute (voix système)</li>
+      <li>Surveillance du dossier Brouillons local</li>
+      <li>Notifications, mises à jour automatiques</li>
+    </ul>
+  </div>
+  <div class="link" aria-hidden="true">⇄</div>
+  <div class="node cloud">
+    <h4>☁️ Le cloud XMO (le cerveau)</h4>
+    <ul>
+      <li>Synchronisation des boîtes mail (jetons chiffrés)</li>
+      <li>Bouclier anti-arnaque + résumés + rangement IA (LLM via OpenRouter)</li>
+      <li>Console aidant (web) + appairage + alertes</li>
+      <li>Push de contenu (médias choisis par la famille)</li>
+      <li>Facturation Stripe</li>
+    </ul>
+  </div>
+</div>
+
+<div class="whynot"><strong>Pourquoi pas « tout dans l'app » ?</strong> ① Une clé API (OpenRouter) embarquée dans un binaire est extractible en quelques minutes → elle doit rester côté serveur. ② Les modèles locaux tournant sur le Mac d'un senior sont trop faibles pour un anti-arnaque fiable. ③ La console aidant est de toute façon un site web. ④ Améliorer les prompts et le routing des modèles sans re-publier l'app (donc sans re-review App Store) exige un backend. <em>Modèle Netflix/Spotify : l'app est un client, le service est en ligne.</em></div>
+
+<!-- ============ CANAUX ============ -->
+<h2>2 · Les trois canaux de distribution</h2>
+<p class="sub">Le même code (coquille <b>Tauri 2</b> recommandée : ~10 Mo, webview système, builds Mac + Windows ; alternative Electron, plus lourde mais plus mature) produit les trois livrables.</p>
+
+<div class="channels">
+  <div class="chan reco">
+    <span class="tag">Canal principal Mac</span>
+    <h4>.dmg notarié</h4>
+    <div class="facts">
+      <span><b>Coût :</b> Apple Developer 99 $/an (Developer ID + notarisation)</span>
+      <span><b>Délai :</b> notarisation en minutes, <b>aucune review</b></span>
+      <span><b>Contraintes :</b> Gatekeeper (glisser dans Applications — l'aidant installe), auto-update à intégrer (Sparkle)</span>
+      <span><b>Liberté :</b> totale — tous les univers, paiement Stripe, 0 % de commission</span>
+    </div>
+    <div class="vd">✅ À faire en premier. Aucune règle d'Apple sur le contenu.</div>
+  </div>
+  <div class="chan reco">
+    <span class="tag">Canal principal Windows</span>
+    <h4>.exe signé (+ Microsoft Store)</h4>
+    <div class="facts">
+      <span><b>Coût :</b> certificat de signature OV/EV ~300–500 €/an</span>
+      <span><b>Délai :</b> immédiat ; SmartScreen fait la tête au début avec un OV (réputation à construire), pas avec un EV</span>
+      <span><b>Contraintes :</b> installeur (MSI/NSIS) + updater (WinSparkle) ; Microsoft Store en complément = confiance + MàJ auto, review légère</span>
+    </div>
+    <div class="vd">✅ Même liberté que le .dmg. Le Store Microsoft est un bonus confiance facile.</div>
+  </div>
+  <div class="chan">
+    <span class="tag">Canal 2 — confiance</span>
+    <h4>Mac App Store</h4>
+    <div class="facts">
+      <span><b>Coût :</b> inclus dans les 99 $/an + <b>15–30 %</b> de commission si paiement intégré</span>
+      <span><b>Délai :</b> review 1–7 j à chaque mise à jour</span>
+      <span><b>Contraintes dures :</b> sandbox obligatoire (OK pour XMO) ; <b>« Mes avis » rémunéré interdit</b> (rémunérer le visionnage de pubs viole les guidelines) ; les wrappers web (réseaux sociaux en iframe) mal vus (règle 4.2)</span>
+    </div>
+    <div class="vd">🟡 À faire ensuite, en édition conforme : login seul (abonnement acheté sur le web par l'aidant → pas de commission), sans l'univers Avis.</div>
+  </div>
+</div>
+
+<!-- ============ FEATURES ============ -->
+<h2>3 · Analyse fonctionnalité par fonctionnalité</h2>
+<p class="sub">Difficulté sur 5 · Faisabilité : ✅ totale · 🟡 partielle/conditionnelle · 🔴 bloquée en l'état. « App Store » = risque spécifique à ce canal.</p>
+
+<h3>Le socle</h3>
+<div class="twrap"><table>
+  <thead><tr><th>Fonctionnalité</th><th>Difficulté</th><th>Faisabilité</th><th>Contraintes clés</th><th>App Store</th><th>Version</th></tr></thead>
+  <tbody>
+    <tr><td class="fn">Coquille cockpit<span class="v">univers, pastille, télé PiP, plein écran</span></td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Mode kiosque + lancement au démarrage (login item). Cibler <b>macOS 11+ / Windows 10+</b> — les vieux PC de seniors en dessous devront passer par la version web.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">Mises à jour auto</td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Sparkle (Mac) / WinSparkle (Windows) ; gérées par les stores sinon. Indispensable : un senior ne met jamais à jour.</td><td class="c">Gérées par le store</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">Appairage senior ↔ aidant<span class="v">comptes, code d'appairage, console web</span></td><td><span class="dots"><span class="on">●●●</span><span class="off">●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">La console aidant reste un site web (inchangée par le choix du canal). Paiement <b>Stripe sur le web</b> par l'aidant → l'app ne fait que se connecter.</td><td class="c">OK si l'app ne pousse pas vers le paiement externe (règles en assouplissement UE/US)</td><td><span class="badge b-v1">V1</span></td></tr>
+  </tbody>
+</table></div>
+
+<h3>Les univers — cœur V1</h3>
+<div class="twrap"><table>
+  <thead><tr><th>Fonctionnalité</th><th>Difficulté</th><th>Faisabilité</th><th>Contraintes clés</th><th>App Store</th><th>Version</th></tr></thead>
+  <tbody>
+    <tr><td class="fn">📬 Boîtes mails multi-fournisseurs</td><td><span class="dots"><span class="on">●●●●</span><span class="off">●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c"><b>Le chemin critique.</b> Gmail : scopes restreints → review Google + <b>audit sécurité CASA annuel</b> (plusieurs semaines à mois, 0–5 k€ selon labo). Outlook : vérification éditeur Microsoft (simple). Yahoo : OAuth IMAP. iCloud : mot de passe d'application (friction gérée par l'aidant). IMAP générique (Orange/SFR/Free) : facile, mais stockage d'identifiants chiffrés côté serveur = responsabilité RGPD.</td><td class="c">OK (clients mail autorisés)</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">🛡️ Bouclier anti-arnaque</td><td><span class="dots"><span class="on">●●●</span><span class="off">●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Server-side : LLM de classification + heuristiques (domaine, SPF/DKIM, liens). Exigences : <b>anti-injection</b> (le contenu d'un mail = données, jamais des instructions) ; tuning des faux positifs ; coût par mail maîtrisé par routing vers un petit modèle.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">🗂️ Brouillons + rangement IA</td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Lecture du doc + proposition de destination = LLM simple. En sandbox App Store : l'accès au dossier surveillé se donne <b>une fois</b> (sélection de dossier, signet persistant) — un écran d'onboarding aidant suffit.</td><td class="c">OK avec permission dossier</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">📁 Dossiers pros / perso</td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Recommandé : bibliothèque gérée par XMO (dans le conteneur de l'app) + import — évite les problèmes de permissions. Sync cloud chiffrée optionnelle.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">📸 Photos perso<span class="v">voir, diaporama, envoyer</span></td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Permission photothèque (macOS) / dossiers (Windows). L'envoi passe par le mail déjà branché.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">👨‍👩‍👧 Ma famille — écrire / appeler</td><td><span class="dots"><span class="on">●</span><span class="off">●●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Écrire = mail (trivial). Appeler V1 = lien FaceTime / WhatsApp (1 clic, fiable). V1.5 : <b>visio intégrée</b> senior↔console aidant en WebRTC (les deux bouts sont à nous → simple et fiable, diff. 3/5).</td><td class="c">OK (permissions caméra/micro)</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">📅 Agenda + rappels</td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Recommandé V1 : agenda <b>interne XMO</b> rempli par l'aidant (aucune review externe, diff. 1/5). La sync Google Calendar ajoute une review de scope Google → V1.5.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+    <tr><td class="fn">📻 Médias light<span class="v">radio web, presse + voix, YouTube</span></td><td><span class="dots"><span class="on">●●</span><span class="off">●●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Radios : flux publics. Presse : RSS + lecture voix (voix système gratuite ; voix premium = coût/mois). YouTube : iframe officielle, conforme. Push de contenu par la famille : notre backend.</td><td class="c">OK</td><td><span class="badge b-v1">V1</span></td></tr>
+  </tbody>
+</table></div>
+
+<h3>Les univers — V2 / V3 (là où sont les murs)</h3>
+<div class="twrap"><table>
+  <thead><tr><th>Fonctionnalité</th><th>Difficulté</th><th>Faisabilité</th><th>Contraintes clés</th><th>App Store</th><th>Version</th></tr></thead>
+  <tbody>
+    <tr><td class="fn">🎨 Retouche photo simple<span class="v">recadrer, éclaircir, filtres</span></td><td><span class="dots"><span class="on">●●●</span><span class="off">●●</span></span></td><td><span class="badge b-ok">✅ Totale</span></td><td class="c">Canvas/WebGL dans l'app. Le <b>montage vidéo</b> est un autre monde (diff. 4/5) → plus tard.</td><td class="c">OK</td><td><span class="badge b-v15">V1.5</span></td></tr>
+    <tr><td class="fn">📺 Chaînes TV en direct<span class="v">dans la télé incrustée</span></td><td><span class="dots"><span class="on">●●●●</span><span class="off">●</span></span></td><td><span class="badge b-part">🟡 Partielle</span></td><td class="c"><b>Mur = droits de diffusion</b>, pas la technique. Jouable dès V1.5 : chaînes à flux ouverts (Arte, France 24, franceinfo…). Le reste : deep-link vers france.tv / Molotov (compte de l'utilisateur) ou accords de distribution (long).</td><td class="c">OK si flux légaux</td><td><span class="badge b-v2">V2</span></td></tr>
+    <tr><td class="fn">🎵 Musique<span class="v">Deezer, Apple Music</span></td><td><span class="dots"><span class="on">●●●●</span><span class="off">●</span></span></td><td><span class="badge b-part">🟡 Partielle</span></td><td class="c"><b>Deezer : API fermée aux nouvelles apps → 🔴 à remplacer</b> (Spotify SDK — Premium requis — ou radios musicales). Apple Music : MusicKit faisable, abonnement de l'utilisateur requis. Dans tous les cas l'aidant configure le compte.</td><td class="c">OK</td><td><span class="badge b-v2">V2</span></td></tr>
+    <tr><td class="fn">🌐 Réseaux sociaux — accès</td><td><span class="dots"><span class="on">●●●</span><span class="off">●●</span></span></td><td><span class="badge b-part">🟡 Partielle</span></td><td class="c">On ne peut <b>ni restyler Facebook</b> (ToS + DOM instable) <b>ni y logger dans une webview embarquée</b> (bloqué par Meta/Google). Réaliste : fenêtre dédiée zoomée/simplifiée autour du vrai site.</td><td class="c">⚠️ Règle 4.2 (wrapper web) — garder cet univers hors App Store ou discret</td><td><span class="badge b-v2">V2</span></td></tr>
+    <tr><td class="fn">📷 Publier caméra 1 clic<span class="v">sur les réseaux du senior</span></td><td><span class="dots"><span class="on">●●●●●</span></span></td><td><span class="badge b-no">🔴 Bloquée en l'état</span></td><td class="c"><b>L'API Meta ne permet pas de publier sur un profil personnel FB/IG</b> (réservé Pages & comptes Business/Creator). Ce qui marche : <b>WhatsApp</b> (deep-link avec média ≈ 1 clic ✅), <b>YouTube</b> (API upload ✅), TikTok (API avec review 🟡). Alternatives à proposer au client : compte Creator configuré par l'aidant, ou « relais famille » (le senior envoie → l'aidant publie).</td><td class="c">idem + review Meta</td><td><span class="badge b-v3">V3</span></td></tr>
+    <tr><td class="fn">⭐ Mes avis + cagnotte</td><td><span class="dots"><span class="on">●●●●●</span></span></td><td><span class="badge b-no">🔴 Sur App Store</span> <span class="badge b-part">🟡 ailleurs</span></td><td class="c">Produit dans le produit : partenaires annonceurs, <b>rémunération d'utilisateurs = KYC, fiscalité, ARPP</b>, anti-fraude. <b>L'App Store interdit de rémunérer le visionnage de pubs</b> → cet univers ne peut PAS exister dans la version App Store. Piste qui passe partout : cagnotte <b>100 % don associatif</b> (jamais de cash au senior) — élégant et aligné avec la cible.</td><td class="c">🔴 interdit (version rémunérée)</td><td><span class="badge b-v3">V3</span></td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============ WALLS ============ -->
+<h2>4 · Les quatre murs à connaître (aucun n'est du code)</h2>
+<div class="walls">
+  <div class="wall">
+    <h4>① Google / Gmail — le chemin critique</h4>
+    <p>Lire les mails Gmail d'un utilisateur = « scopes restreints » : vérification d'app + <b>audit de sécurité CASA annuel</b>. Délai en semaines/mois, coût 0–5 k€ selon le laboratoire.</p>
+    <div class="fix"><b>Parade :</b> déposer le dossier Google <b>dès la semaine 1</b> et développer avec Outlook/IMAP en attendant.</div>
+  </div>
+  <div class="wall">
+    <h4>② Meta — publier sur un profil perso est impossible</h4>
+    <p>Aucune API ne poste sur le Facebook/Instagram personnel d'un utilisateur. Ce n'est pas une difficulté, c'est une porte fermée.</p>
+    <div class="fix"><b>Parade :</b> WhatsApp en 1 clic (ça, ça marche), YouTube API, compte Creator configuré par l'aidant, ou relais famille.</div>
+  </div>
+  <div class="wall">
+    <h4>③ Droits TV & musique</h4>
+    <p>Diffuser TF1 ou Deezer dans la télé incrustée exige des accords (et l'API Deezer est fermée). Le calendrier appartient aux ayants droit.</p>
+    <div class="fix"><b>Parade :</b> V1 = radios + presse + YouTube + chaînes à flux ouverts (Arte, France 24…). Accords en parallèle.</div>
+  </div>
+  <div class="wall">
+    <h4>④ App Store vs « Mes avis »</h4>
+    <p>Rémunérer le visionnage de pubs est contraire aux guidelines Apple : l'univers Avis (version cash) est incompatible avec le canal App Store.</p>
+    <div class="fix"><b>Parade :</b> deux éditions du même code — complète (.dmg/.exe) et conforme (App Store, sans Avis) ; ou cagnotte 100 % don.</div>
+  </div>
+</div>
+
+<p class="sub" style="margin-top:18px"><b>Contrainte transversale — RGPD :</b> les mails d'un senior contiennent potentiellement des données de santé → hébergement UE, chiffrement au repos, registre des traitements, droit à l'oubli, et un mot dans le contrat aidant. À intégrer dès l'architecture, pas après.</p>
+
+<!-- ============ TIMELINE ============ -->
+<h2>5 · Chiffrage indicatif (V1 native, ~4 mois)</h2>
+<p class="sub">Équipe : 1 dev fullstack senior + toi. Les blocs se parallélisent ; le calendrier est dicté par Google, pas par le code.</p>
+<ul class="tl">
+  <li><span class="w">Sem. 1</span><span class="crit">⚠️ Dépôt des dossiers Google (Gmail) et Microsoft — chemin critique, tout de suite</span></li>
+  <li><span class="w">Sem. 1–4</span>Coquille Tauri : cockpit, univers, pastille, télé PiP, kiosque, updater, signature/notarisation .dmg + .exe</li>
+  <li><span class="w">Sem. 3–8</span>Connecteurs mail (Outlook + IMAP d'abord, Gmail à la validation) + sync serveur + chiffrement des jetons</li>
+  <li><span class="w">Sem. 5–8</span>Bouclier anti-arnaque + résumés + lecture voix (routing petit modèle via OpenRouter)</li>
+  <li><span class="w">Sem. 7–9</span>Rangement IA des brouillons + dossiers + photos</li>
+  <li><span class="w">Sem. 8–12</span>Console aidant web : appairage, alertes bouclier, agenda interne, contacts famille, Stripe</li>
+  <li><span class="w">Sem. 12–14</span>Médias light + famille (liens d'appel) + QA avec de vrais binômes senior/aidant</li>
+  <li><span class="w">Sem. 14–16</span>Durcissement, RGPD, bêta fermée ; soumission Mac App Store (édition conforme) ensuite</li>
+</ul>
+
+<!-- ============ RECO ============ -->
+<h2>6 · Recommandations</h2>
+<div class="verdictbox">
+  <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
+    <li><b>Coquille Tauri 2</b> (léger, un code → .dmg + .exe + App Store) ; le front cockpit existe déjà en HTML.</li>
+    <li><b>Ordre des canaux :</b> ① .dmg notarié + .exe signé (liberté, 0 % commission) → ② Microsoft Store (confiance facile) → ③ Mac App Store en édition conforme.</li>
+    <li><b>Paiement toujours sur le web</b> (Stripe, par l'aidant) — jamais d'achat intégré Apple.</li>
+    <li><b>Lancer les validations Google semaine 1</b> — c'est elles qui datent la sortie, pas le développement.</li>
+    <li><b>Transparence sur Meta et les Avis :</b> la publication sur un profil FB/IG personnel est impossible par API (alternatives : WhatsApp, YouTube, relais famille) ; l'univers Avis en version rémunérée est incompatible avec l'App Store (piste élégante : cagnotte 100 % don).</li>
+  </ol>
+</div>
+
+<footer>XMO — annexe technique · non contractuelle. Sources des contraintes : guidelines App Store (4.2, monétisation), politique Google « restricted scopes » / CASA, API Meta Content Publishing, notarisation Apple Developer ID, SmartScreen/Authenticode. · <a href="../presentation/" style="color:var(--green)">← Retour à la présentation</a></footer>
+
+</div>

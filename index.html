@@ -294,8 +294,9 @@
         <div class="u-title"><span class="em">📺</span><h2>Mes médias</h2></div>
         <p class="u-sub">Tout ce qui se regarde et s'écoute — et ça tourne dans la télé en bas à droite. Cliquez la télé pour l'agrandir.</p>
         <div class="media-grid">
+          <button class="mtile" onclick="playRadio('laradioai','La Radio AI')"><span class="mem">🎙️</span>La Radio AI<span class="md">Radio 100 % IA · joue en vrai !</span></button>
+          <button class="mtile" onclick="playRadio('franceinter','France Inter')"><span class="mem">📻</span>France Inter<span class="md">Radio en direct · joue en vrai !</span></button>
           <button class="mtile" onclick="tvChannel('France 2 · en direct')"><span class="mem">📺</span>Chaînes TV<span class="md">TNT en direct</span></button>
-          <button class="mtile" onclick="tvChannel('France Inter · radio')"><span class="mem">📻</span>Radio<span class="md">Toutes les stations</span></button>
           <button class="mtile" onclick="tvChannel('Deezer · playlist')"><span class="mem">🎵</span>Deezer<span class="md">Musique</span></button>
           <button class="mtile" onclick="tvChannel('Apple Music')"><span class="mem">🍎</span>Apple Music<span class="md">Musique</span></button>
           <button class="mtile" onclick="tvChannel('La Presse du jour')"><span class="mem">📰</span>Presse<span class="md">Articles du jour</span></button>
@@ -355,9 +356,27 @@
   }
   function home(){ openU('u-home'); }
 
-  /* ---------- TV ---------- */
+  /* ---------- TV + radio réelle ---------- */
   function toggleTv(){ document.getElementById('tv').classList.toggle('full'); }
   function tvChannel(name){ document.getElementById('tvch').textContent=name; toast('▶ '+name+' — la télé est en bas à droite'); }
+  const RADIOS = {
+    laradioai:   'https://stream.la-radio.ai/listen/la_radio_ai_/radio.mp3',
+    franceinter: 'https://icecast.radiofrance.fr/franceinter-midfi.mp3',
+  };
+  let audio=null, currentRadio=null;
+  function playRadio(key, label){
+    if(currentRadio===key){                       // re-clic = stop
+      if(audio){audio.pause();audio=null;}
+      currentRadio=null;
+      document.getElementById('tvch').textContent='Cliquez un média pour écouter';
+      toast('⏸ Radio arrêtée'); return;
+    }
+    if(audio) audio.pause();
+    audio=new Audio(RADIOS[key]); audio.play().catch(()=>toast('⚠️ Flux indisponible'));
+    currentRadio=key;
+    document.getElementById('tvch').textContent=label+' · en direct';
+    toast('▶ '+label+' — dans la télé en bas à droite');
+  }
 
   /* ---------- mail data ---------- */
   const MAILS={
