@@ -1,466 +1,644 @@
-<title>XMO — maquette du cockpit</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XMO — maquette</title>
 <style>
+  /* ═══ XMO — « le journal et le livre en gros caractères » — version démo publique ═══ */
   :root{
-    --ground:#DFE3D6; --screen:#F4F1E9; --surface:#FFFFFF;
-    --ink:#1E241E; --ink-soft:#5A5A50; --hairline:#E1DBCB;
-    --green:#2F7D63; --green-strong:#215B48; --green-tint:#E4F0EA;
-    --honey:#C98A3C; --honey-tint:#F6ECDA;
-    --warn:#B23A26; --warn-tint:#F8E7E1; --warn-strong:#8F2C1B;
-    --r:20px; --r-sm:14px;
-    --shadow:0 24px 60px -26px rgba(25,40,25,.5);
-    --shadow-soft:0 8px 22px -14px rgba(25,40,25,.4);
-    --display:Georgia,'Times New Roman',serif;
-    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --paper:#F5F1E6; --ground:#E6E2D2; --surface:#FFFDF7;
+    --ink:#232A20; --ink-soft:#5D5C4E; --hairline:#DCD5C0;
+    --vert:#2F7D63; --vert-fort:#1F5C47; --vert-tint:#E1EDE4;
+    --miel:#C98A3C; --miel-fort:#A56F2B; --miel-tint:#F4E6C6;
+    --rouge:#B23A26; --rouge-tint:#F8E7E1; --rouge-fort:#8F2C1B;
+    --ambre:#9A6B15; --ambre-tint:#F5EBD4;
+    --med-famille:#F2DDD3; --med-agenda:#DEE7EA; --med-brouillons:#F4E6C6;
+    --med-dossiers:#DFE9D8; --med-photos:#EADEE7; --med-medias:#D9E9E4; --med-soon:#ECEAE2;
+    --r:18px; --r-sm:13px;
+    --shadow:0 22px 54px -26px rgba(38,42,30,.45);
+    --shadow-soft:0 6px 18px -12px rgba(38,42,30,.4);
+    --display:'Superclarendon','Rockwell','Georgia',serif;
+    --sans:'Seravek','Verdana','Trebuchet MS',system-ui,sans-serif;
     color-scheme:light;
   }
   *{box-sizing:border-box}
-  html{font-size:17px}
-  body{
-    margin:0;font-family:var(--sans);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
-    background:var(--ground);
-    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
-  }
+  html{font-size:18px}
+  body{margin:0;font-family:var(--sans);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,.5) 0%, transparent 55%),var(--ground);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-  /* ===== the screen / cockpit ===== */
-  .os{
-    width:100%;max-width:1080px;height:min(760px,86vh);position:relative;overflow:hidden;
-    border-radius:26px;box-shadow:var(--shadow);border:1px solid var(--hairline);
+  .os{width:100%;max-width:1120px;height:min(780px,92vh);position:relative;overflow:hidden;
+    border-radius:24px;box-shadow:var(--shadow);border:1px solid var(--hairline);
     background:
-      radial-gradient(90% 70% at 82% 8%, var(--honey-tint) 0%, transparent 42%),
-      radial-gradient(80% 70% at 10% 6%, var(--green-tint) 0%, transparent 40%),
-      var(--screen);
-    display:flex;flex-direction:column;
-  }
+      repeating-linear-gradient(0deg, rgba(120,108,76,.022) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(120,108,76,.02) 0 1px, transparent 1px 3px),
+      radial-gradient(85% 65% at 85% 6%, var(--miel-tint) 0%, transparent 45%),
+      radial-gradient(75% 65% at 8% 4%, var(--vert-tint) 0%, transparent 42%),
+      var(--paper);
+    display:flex;flex-direction:column}
 
-  /* ===== top bar ===== */
-  .topbar{
-    display:flex;align-items:center;gap:16px;padding:16px 22px;flex:0 0 auto;
-    background:rgba(255,255,255,.62);backdrop-filter:blur(6px);border-bottom:1px solid var(--hairline);
-  }
-  .pastille{
-    width:58px;height:58px;border-radius:50%;flex:0 0 auto;cursor:pointer;border:0;
-    background:radial-gradient(circle at 35% 30%, var(--green) 0%, var(--green-strong) 100%);
-    box-shadow:0 0 0 3px var(--honey), var(--shadow-soft);
-    color:#fff;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;
-    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
-  }
+  .topbar{display:flex;align-items:center;gap:15px;padding:15px 22px 13px;flex:0 0 auto;position:relative;
+    background:rgba(255,253,247,.6);backdrop-filter:blur(6px)}
+  .topbar::after{content:"";position:absolute;left:22px;right:22px;bottom:0;height:5px;
+    border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+  .pastille{width:58px;height:58px;border-radius:50%;flex:0 0 auto;cursor:pointer;border:0;position:relative;
+    font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:.04em;color:#F7F3E4;
+    background:
+      radial-gradient(circle at 32% 26%, rgba(255,255,255,.38) 0%, transparent 42%),
+      radial-gradient(circle at 50% 115%, rgba(0,0,0,.28) 0%, transparent 55%), var(--vert);
+    box-shadow:0 0 0 2px var(--miel), 0 0 0 3.5px var(--miel-fort), var(--shadow-soft),
+      inset 0 1px 1px rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease}
   .pastille:hover{transform:scale(1.06)}
-  .pastille small{display:block;font-size:.55rem;letter-spacing:.18em;opacity:.85;margin-top:-2px;font-family:var(--sans)}
-  .avatar-home{width:52px;height:52px;border-radius:50%;flex:0 0 auto;object-fit:cover;
-    background:linear-gradient(140deg,#C2557A,#8f3d5b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;border:3px solid #fff;box-shadow:var(--shadow-soft)}
-  .whoami{display:flex;flex-direction:column;min-width:0}
-  .whoami .hi{font-family:var(--display);font-size:1.32rem;line-height:1.05}
-  .whoami .dt{color:var(--ink-soft);font-size:.85rem}
+  .pastille:active{transform:scale(.98)}
+  .avatar-home{width:50px;height:50px;border-radius:50%;flex:0 0 auto;
+    background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.35) 0%, transparent 45%),
+      linear-gradient(140deg,#C2557A,#8f3d5b);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.25rem;
+    border:2.5px solid var(--surface);box-shadow:var(--shadow-soft), inset 0 -5px 8px -5px rgba(0,0,0,.3)}
+  .whoami .hi{font-family:var(--display);font-size:1.42rem;line-height:1.05;display:block}
+  .whoami .dt{color:var(--ink-soft);font-size:.82rem}
   .topbar .spacer{flex:1}
-  .top-pill{background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:9px 15px;font-weight:600;font-size:.9rem;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .top-pill{background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:7px 13px;
+    font-weight:600;font-size:.8rem;color:var(--ink-soft);display:flex;align-items:center;gap:7px;white-space:nowrap}
 
-  /* ===== content / universes ===== */
   .content{flex:1;overflow-y:auto;padding:24px 26px 30px;position:relative}
   .universe{display:none;animation:fade .25s ease both}
   .universe.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .u-title{display:flex;align-items:center;gap:12px;margin:0 0 4px}
-  .u-title .em{font-size:1.9rem}
-  .u-title h2{font-family:var(--display);font-size:1.7rem;margin:0}
-  .u-sub{color:var(--ink-soft);margin:0 0 20px;font-size:1.02rem}
+  .u-title{display:flex;align-items:center;gap:13px;margin:0 0 4px}
+  .u-title .med{width:46px;height:46px;font-size:1.45rem}
+  .u-title h2{font-family:var(--display);font-size:1.65rem;margin:0}
+  .u-sub{color:var(--ink-soft);margin:6px 0 18px;font-size:.98rem;max-width:64ch}
 
-  /* home grid of universes */
-  .home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .med{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.65rem;line-height:1;flex:0 0 auto;background:
+      radial-gradient(circle at 32% 26%, rgba(255,255,255,.75) 0%, transparent 45%), var(--med-bg,var(--med-dossiers));
+    box-shadow:inset 0 0 0 1px rgba(60,50,20,.12), inset 0 -6px 10px -6px rgba(60,50,20,.25), 0 1px 2px rgba(60,50,20,.15)}
+
+  .home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
   @media (max-width:780px){.home-grid{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:520px){.home-grid{grid-template-columns:1fr}}
-  .uni{
-    background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:20px 18px;
+  .uni{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:16px;
     text-align:left;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);
-    display:flex;flex-direction:column;gap:8px;min-height:128px;position:relative;transition:transform .12s ease,box-shadow .12s ease;
-  }
+    display:flex;flex-direction:column;gap:8px;min-height:126px;position:relative;
+    transition:transform .12s ease, box-shadow .12s ease;animation:settle .45s ease backwards}
+  .uni:nth-child(1){animation-delay:.02s}.uni:nth-child(2){animation-delay:.06s}
+  .uni:nth-child(3){animation-delay:.1s}.uni:nth-child(4){animation-delay:.14s}
+  .uni:nth-child(5){animation-delay:.18s}.uni:nth-child(6){animation-delay:.22s}
+  .uni:nth-child(7){animation-delay:.26s}.uni:nth-child(8){animation-delay:.3s}
+  .uni:nth-child(9){animation-delay:.34s}
+  @keyframes settle{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
   .uni:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-  .uni .em{font-size:2.1rem;line-height:1}
-  .uni .nm{font-weight:800;font-size:1.12rem;letter-spacing:.01em}
-  .uni .ds{color:var(--ink-soft);font-size:.9rem;line-height:1.3}
-  .uni .count{position:absolute;top:14px;right:14px;background:var(--honey);color:#fff;font-weight:800;font-size:.82rem;padding:3px 11px;border-radius:999px;box-shadow:var(--shadow-soft)}
-  .uni.accent{background:linear-gradient(160deg,var(--green),var(--green-strong));border-color:transparent}
-  .uni.accent .nm,.uni.accent .em{color:#fff}
-  .uni.accent .ds{color:rgba(255,255,255,.9)}
+  .uni .nm{font-family:var(--display);font-weight:700;font-size:1.16rem}
+  .uni .ds{color:var(--ink-soft);font-size:.86rem;line-height:1.3}
+  .uni .count{position:absolute;top:13px;right:13px;background:var(--miel);color:#fff;font-weight:700;
+    font-size:.78rem;padding:3px 10px;border-radius:999px;box-shadow:var(--shadow-soft)}
+  .uni .count.alert{background:var(--rouge)}
+  .uni.accent{background:
+      radial-gradient(circle at 20% 0%, rgba(255,255,255,.14) 0%, transparent 50%),
+      linear-gradient(160deg,var(--vert),var(--vert-fort));border-color:var(--vert-fort)}
+  .uni.accent .nm{color:#F7F3E4}
+  .uni.accent .ds{color:rgba(247,243,228,.85)}
+  .uni.accent .med{background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.5) 0%, transparent 45%),
+    rgba(255,255,255,.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25), inset 0 -6px 10px -6px rgba(0,0,0,.3)}
+  .uni.soon{background:transparent;border:1.5px dashed var(--hairline);box-shadow:none;opacity:.75}
+  .uni.soon:hover{transform:none;box-shadow:none}
+  .uni.soon .med{background:var(--med-soon);box-shadow:inset 0 0 0 1px rgba(60,50,20,.08);filter:grayscale(.4)}
+  .uni .soonbadge{position:absolute;top:13px;right:13px;background:transparent;color:var(--ink-soft);
+    font-weight:600;font-size:.72rem;padding:3px 10px;border-radius:999px;border:1px solid var(--hairline)}
 
-  /* generic content cards inside universes */
-  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-  .ccard{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:6px}
-  .card .cem{font-size:1.6rem}
-  .card .ct{font-weight:700}
-  .card .cd{color:var(--ink-soft);font-size:.85rem}
-  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;padding:12px 18px;border-radius:13px;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;gap:9px;justify-content:center}
-  .btn-primary{background:var(--green);color:#fff}
-  .btn-primary:hover{background:var(--green-strong)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:14px}
+  .card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:16px;
+    box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:6px}
+  .card .cem{font-size:1.5rem}
+  .card .ct{font-family:var(--display);font-weight:700;word-break:break-word;font-size:.98rem}
+  .card .cd{color:var(--ink-soft);font-size:.84rem}
+  .btn{font-family:var(--sans);font-weight:700;font-size:.96rem;padding:12px 17px;border-radius:13px;cursor:pointer;
+    border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:transform .08s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--vert);color:#F7F3E4;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18)}
+  .btn-primary:hover{background:var(--vert-fort)}
   .btn-ghost{background:var(--surface);border-color:var(--hairline);color:var(--ink)}
-  .btn-ghost:hover{border-color:var(--green)}
-  .btn-honey{background:var(--honey);color:#fff}
-  .btn-danger{background:var(--warn);color:#fff}
-  .btn-warnghost{background:var(--surface);border-color:var(--warn);color:var(--warn-strong)}
-  .note{background:var(--green-tint);border:1px dashed var(--green);border-radius:var(--r-sm);padding:13px 16px;color:var(--ink);font-size:.95rem;margin-top:16px}
+  .btn-ghost:hover{border-color:var(--vert)}
+  .btn-danger{background:var(--rouge);color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+  .btn-warnghost{background:var(--surface);border-color:var(--rouge);color:var(--rouge-fort)}
+  .btn[disabled]{opacity:.5;cursor:wait}
+  .note{background:var(--vert-tint);border:1px dashed var(--vert);border-radius:var(--r-sm);padding:12px 15px;
+    font-size:.92rem;margin-top:16px}
+  .empty{color:var(--ink-soft);font-size:1rem;padding:24px;text-align:center}
+  .spin{display:inline-block;width:20px;height:20px;border:3px solid var(--hairline);border-top-color:var(--vert);
+    border-radius:50%;animation:rot 1s linear infinite;vertical-align:middle}
+  @keyframes rot{to{transform:rotate(360deg)}}
 
-  /* mail flow */
   .mlist{display:flex;flex-direction:column;gap:11px}
-  .mail{display:flex;gap:13px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:14px;cursor:pointer;font-family:var(--sans);color:var(--ink);box-shadow:var(--shadow-soft);text-align:left}
-  .mail:hover{border-color:var(--green)}
-  .mail.flag{border-color:var(--warn);background:var(--warn-tint)}
-  .av{width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:1.1rem}
-  .mail .who{font-weight:700;font-size:1.05rem}
-  .mail .subj{color:var(--ink-soft);font-size:.92rem;margin-top:1px}
-  .mail .time{margin-left:auto;color:var(--ink-soft);font-size:.8rem;flex:0 0 auto}
-  .flagchip{background:var(--warn);color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px}
-  .read{display:flex;flex-direction:column;gap:16px;max-width:640px}
-  .read h3{font-family:var(--display);font-size:1.4rem;margin:0}
-  .read .content-t{font-size:1.12rem;line-height:1.55}
-  .warncard{background:var(--warn-tint);border:2px solid var(--warn);border-radius:var(--r-sm);padding:16px 18px}
-  .warncard .h{color:var(--warn-strong);font-weight:800;font-size:1.1rem;display:flex;gap:9px;align-items:center}
-  .warncard ul{margin:8px 0 0;padding-left:20px;color:var(--warn-strong)}
+  .mail{display:flex;gap:13px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--hairline);
+    border-radius:var(--r-sm);padding:14px;cursor:pointer;font-family:var(--sans);color:var(--ink);
+    box-shadow:var(--shadow-soft);text-align:left}
+  .mail:hover{border-color:var(--vert)}
+  .mail.flag{border-color:var(--rouge);background:var(--rouge-tint)}
+  .av{width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:#fff;font-size:1.05rem;
+    box-shadow:inset 0 -5px 8px -5px rgba(0,0,0,.35), inset 0 1px 1px rgba(255,255,255,.3)}
+  .mail .who{font-weight:700;font-size:1.02rem}
+  .mail .subj{color:var(--ink-soft);font-size:.88rem;margin-top:1px}
+  .mail .time{margin-left:auto;color:var(--ink-soft);font-size:.76rem;flex:0 0 auto}
+  .chipflag{color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px}
+  .chipflag.suspect{background:var(--rouge)}
+
+  .read{display:flex;flex-direction:column;gap:15px;max-width:660px}
+  .read h3{font-family:var(--display);font-size:1.35rem;margin:0}
+  .read .content-t{font-size:1.08rem;line-height:1.6;white-space:pre-wrap}
+  .resume{background:var(--vert-tint);border-radius:var(--r-sm);padding:13px 16px;font-size:1.02rem}
+  .resume b{color:var(--vert-fort)}
+  .warncard{background:var(--rouge-tint);border:2px solid var(--rouge);border-radius:var(--r-sm);padding:15px 17px}
+  .warncard .h{color:var(--rouge-fort);font-weight:800;font-size:1.06rem;display:flex;gap:9px;align-items:center;
+    font-family:var(--display)}
+  .warncard ul{margin:8px 0 0;padding-left:20px;color:var(--rouge-fort)}
   .actions{display:flex;gap:11px;flex-wrap:wrap}
   .actions .btn{flex:1;min-width:150px}
-  textarea{width:100%;font-family:var(--sans);font-size:1.08rem;line-height:1.5;padding:14px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--ink);min-height:110px;resize:vertical}
+  textarea{width:100%;font-family:var(--sans);font-size:1.04rem;line-height:1.55;padding:14px;border-radius:var(--r-sm);
+    border:1px solid var(--hairline);background:var(--surface);color:var(--ink);min-height:110px;resize:vertical}
+  .backline{display:inline-flex;align-items:center;gap:8px;background:transparent;border:0;color:var(--vert-fort);
+    font-weight:700;font-family:var(--sans);font-size:.96rem;cursor:pointer;padding:6px 0;margin-bottom:8px}
 
-  .backline{display:inline-flex;align-items:center;gap:8px;background:transparent;border:0;color:var(--green-strong);font-weight:700;font-family:var(--sans);font-size:1rem;cursor:pointer;padding:6px 0;margin-bottom:8px}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:12px}
+  .thumb{aspect-ratio:1;border-radius:var(--r-sm);box-shadow:var(--shadow-soft);border:1px solid var(--hairline)}
 
-  /* photo grid */
-  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
-  .thumb{aspect-ratio:1;border-radius:var(--r-sm);background-size:cover;background-position:center;box-shadow:var(--shadow-soft);border:1px solid var(--hairline)}
-  .toolbar-edit{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-  .chip{background:var(--surface);border:1px solid var(--hairline);border-radius:11px;padding:9px 14px;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .contact{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:18px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:var(--shadow-soft)}
+  .contact .avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:1.5rem;
+    box-shadow:inset 0 -6px 10px -6px rgba(0,0,0,.35), inset 0 1px 1px rgba(255,255,255,.3)}
+  .contact .cn{font-family:var(--display);font-weight:700;font-size:1.08rem}
+  .contact .cr{color:var(--ink-soft);font-size:.84rem;margin-top:-6px}
+  .contact .crow{display:flex;gap:9px;width:100%}
+  .contact .crow .btn{flex:1;font-size:.88rem;padding:10px 8px}
 
-  /* social buttons */
-  .social{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-  .sbtn{border:1px solid var(--hairline);background:var(--surface);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;font-weight:700;box-shadow:var(--shadow-soft);color:var(--ink)}
-  .sbtn:hover{transform:translateY(-2px)}
-  .sbtn .slogo{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem}
+  .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+  .mtile{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:16px;cursor:pointer;
+    display:flex;flex-direction:column;gap:7px;box-shadow:var(--shadow-soft);font-weight:700;color:var(--ink);
+    font-family:var(--sans);text-align:left}
+  .mtile:hover{border-color:var(--vert)}
+  .mtile.playing{border-color:var(--vert);background:var(--vert-tint)}
+  .mtile .mem{font-size:1.65rem}
+  .mtile .md{color:var(--ink-soft);font-size:.79rem;font-weight:500}
+  .mtile.soon{opacity:.55}
+  .press-item{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:15px;
+    margin-bottom:11px;box-shadow:var(--shadow-soft)}
+  .press-item .pt{font-family:var(--display);font-weight:700;font-size:1.04rem;line-height:1.35}
+  .press-item .pd{color:var(--ink-soft);font-size:.9rem;margin-top:4px}
 
-  /* avis */
-  .cagnotte{background:linear-gradient(150deg,var(--honey),#a56d26);color:#fff;border-radius:var(--r);padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:var(--shadow-soft);margin-bottom:16px;flex-wrap:wrap}
-  .cagnotte .amt{font-family:var(--display);font-size:2.1rem;line-height:1}
+  .agenda-ev{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:16px;
+    margin-bottom:11px;box-shadow:var(--shadow-soft);display:flex;gap:14px;align-items:baseline}
+  .agenda-ev .when{font-family:var(--display);color:var(--vert-fort);font-weight:700;white-space:nowrap}
+  .agenda-ev .what{font-size:1.02rem}
+  .agenda-ev .note2{color:var(--ink-soft);font-size:.88rem;display:block;margin-top:2px}
 
-  /* media tiles */
-  .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
-  .mtile{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r);padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-soft);font-weight:700;color:var(--ink)}
-  .mtile:hover{border-color:var(--green)}
-  .mtile .mem{font-size:1.8rem}
-  .mtile .md{color:var(--ink-soft);font-size:.82rem;font-weight:500}
-
-  /* ===== TV widget (bottom-right, ~6x6cm) ===== */
-  .tv{
-    position:absolute;right:20px;bottom:20px;width:150px;height:150px;border-radius:16px;overflow:hidden;
-    cursor:pointer;box-shadow:0 14px 34px -12px rgba(0,0,0,.55);border:3px solid #fff;z-index:30;
-    transition:all .28s cubic-bezier(.2,.7,.2,1);
-    background:linear-gradient(160deg,#22303a,#0f1a20);
-  }
-  .tv .tv-screen{position:absolute;inset:0;background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 4px),
-      radial-gradient(circle at 50% 40%, #3a6f8a 0%, #16232b 70%);}
-  .tv .live{position:absolute;top:8px;left:8px;background:var(--warn);color:#fff;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+  .tv{position:absolute;right:20px;bottom:20px;width:150px;height:150px;border-radius:16px;overflow:hidden;
+    cursor:pointer;box-shadow:0 14px 34px -12px rgba(0,0,0,.55);border:3px solid var(--surface);z-index:30;
+    transition:all .28s cubic-bezier(.2,.7,.2,1);background:linear-gradient(160deg,#22303a,#0f1a20)}
+  .tv .tv-screen{position:absolute;inset:0;background:repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 4px),
+    radial-gradient(circle at 50% 40%, #3a6f8a 0%, #16232b 70%)}
+  .tv .eq{position:absolute;inset:auto 0 34px 0;display:flex;justify-content:center;gap:5px;align-items:flex-end;height:44px;opacity:0}
+  .tv.playing .eq{opacity:1}
+  .tv .eq i{width:7px;background:linear-gradient(180deg,#9fd8c0,#3a8a6b);border-radius:3px;animation:eq 1s ease-in-out infinite}
+  .tv .eq i:nth-child(2){animation-delay:.15s}.tv .eq i:nth-child(3){animation-delay:.35s}
+  .tv .eq i:nth-child(4){animation-delay:.5s}.tv .eq i:nth-child(5){animation-delay:.25s}
+  @keyframes eq{0%,100%{height:12px}50%{height:40px}}
+  .tv .live{position:absolute;top:8px;left:8px;background:var(--rouge);color:#fff;font-size:.6rem;font-weight:800;
+    padding:2px 7px;border-radius:5px;display:flex;align-items:center;gap:5px}
   .tv .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.4s infinite}
   @keyframes blink{50%{opacity:.3}}
-  .tv .ch{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;font-size:.72rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
-  .tv .hint{position:absolute;bottom:8px;right:8px;color:rgba(255,255,255,.7);font-size:.6rem}
+  .tv .ch{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;font-size:.7rem;font-weight:700;
+    text-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .tv .hint{position:absolute;bottom:8px;right:8px;color:rgba(255,255,255,.7);font-size:.58rem}
   .tv.full{right:3%;bottom:3%;left:3%;top:3%;width:auto;height:auto;border-radius:20px}
   .tv.full .ch{font-size:1.3rem;bottom:20px;left:20px}
-  .tv.full .live{font-size:.85rem;padding:4px 11px;top:16px;left:16px}
-  .tv .exit{position:absolute;top:10px;right:12px;color:#fff;font-size:1.1rem;font-weight:700;display:none;background:rgba(0,0,0,.35);border-radius:8px;padding:2px 9px}
-  .tv.full .exit{display:block}
-  .tv .hint{display:block}
   .tv.full .hint{display:none}
+  .tv .exit{position:absolute;top:10px;right:12px;color:#fff;font-size:1.02rem;font-weight:700;display:none;
+    background:rgba(0,0,0,.35);border-radius:8px;padding:2px 9px}
+  .tv.full .exit{display:block}
 
-  /* toast + modal */
-  .toast{position:absolute;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--screen);padding:13px 20px;border-radius:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:var(--shadow);max-width:80%;text-align:center}
+  .toast{position:absolute;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);
+    color:var(--paper);padding:13px 20px;border-radius:13px;font-weight:600;opacity:0;pointer-events:none;
+    transition:.25s;z-index:60;box-shadow:var(--shadow);max-width:80%;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .modal{position:absolute;inset:0;background:rgba(20,15,8,.5);display:none;align-items:center;justify-content:center;padding:24px;z-index:70}
+  .modal{position:absolute;inset:0;background:rgba(35,30,15,.5);display:none;align-items:center;justify-content:center;
+    padding:24px;z-index:70}
   .modal.show{display:flex}
-  .modal .card2{background:var(--surface);border-radius:22px;padding:26px;max-width:400px;width:100%;text-align:center;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
-  .modal h4{font-family:var(--display);font-size:1.4rem;margin:0}
+  .modal .card2{background:var(--surface);border-radius:20px;padding:26px;max-width:430px;width:100%;text-align:center;
+    display:flex;flex-direction:column;gap:13px;box-shadow:var(--shadow)}
+  .modal h4{font-family:var(--display);font-size:1.35rem;margin:0}
   .modal p{margin:0;color:var(--ink-soft)}
   .modal .row{display:flex;gap:12px;margin-top:4px}
   .modal .row .btn{flex:1}
+  .iabox{background:var(--vert-tint);border:1px dashed var(--vert);border-radius:12px;padding:12px;font-size:1rem}
+  .iabox small{display:block;color:var(--ink-soft);margin-top:4px}
 
-  :focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:8px}
+  :focus-visible{outline:3px solid var(--miel);outline-offset:3px;border-radius:8px}
 </style>
+</head>
+<body>
 
-<div class="frame">
-  <div class="os">
+<div class="os">
 
-    <!-- TOP BAR (persistent) -->
-    <div class="topbar">
-      <button class="pastille" onclick="home()" aria-label="Revenir à l'accueil" title="Accueil">XMO</button>
-      <div class="avatar-home" aria-hidden="true">J</div>
-      <div class="whoami">
-        <span class="hi">Bonjour Jacqueline</span>
-        <span class="dt">Mardi 6 juillet · 14 h 20</span>
+  <div class="topbar">
+    <button class="pastille" onclick="home()" aria-label="Revenir à l'accueil" title="Accueil">XMO</button>
+    <div class="avatar-home" aria-hidden="true">J</div>
+    <div class="whoami">
+      <span class="hi" id="greet">Bonjour Jacqueline.</span>
+      <span class="dt" id="datebar">—</span>
+    </div>
+    <span class="spacer"></span>
+    <span class="top-pill">🛡️ Protégé par la famille</span>
+  </div>
+
+  <div class="content" id="content">
+
+    <!-- HOME -->
+    <section class="universe active" id="u-home">
+      <div class="home-grid">
+        <button class="uni accent" onclick="openU('u-mail')"><span class="med">📬</span><span class="count alert" id="mailbadge">1 suspect</span><span class="nm">Mes boîtes mails</span><span class="ds">Vos messages, protégés</span></button>
+        <button class="uni" onclick="openU('u-famille')"><span class="med" style="--med-bg:var(--med-famille)">👨‍👩‍👧</span><span class="nm">Ma famille</span><span class="ds">Appeler ou écrire en un clic</span></button>
+        <button class="uni" onclick="openU('u-agenda')"><span class="med" style="--med-bg:var(--med-agenda)">📅</span><span class="count" style="background:var(--vert)">2 à venir</span><span class="nm">Mon agenda</span><span class="ds">Rendez-vous et rappels</span></button>
+        <button class="uni" onclick="openU('u-drafts')"><span class="count" id="draftbadge">7 à ranger</span><span class="med" style="--med-bg:var(--med-brouillons)">🗂️</span><span class="nm">Mes brouillons</span><span class="ds">XMO propose où les ranger</span></button>
+        <button class="uni" onclick="openU('u-dossiers')"><span class="med" style="--med-bg:var(--med-dossiers)">📁</span><span class="nm">Mes dossiers</span><span class="ds">Pros et perso, bien rangés</span></button>
+        <button class="uni" onclick="openU('u-photos')"><span class="med" style="--med-bg:var(--med-photos)">📸</span><span class="nm">Mes photos</span><span class="ds">Souvenirs et diaporama</span></button>
+        <button class="uni" onclick="openU('u-media')"><span class="med" style="--med-bg:var(--med-medias)">📻</span><span class="nm">Mes médias</span><span class="ds">Radio, presse, vidéos</span></button>
+        <button class="uni soon" onclick="toast('🌐 Réseaux sociaux : arrive dans la version 2 🙂')"><span class="soonbadge">À venir</span><span class="med">🌐</span><span class="nm">Mes réseaux sociaux</span><span class="ds">Version 2</span></button>
+        <button class="uni soon" onclick="toast('⭐ Mes avis : arrive dans une prochaine version 🙂')"><span class="soonbadge">À venir</span><span class="med">⭐</span><span class="nm">Mes avis</span><span class="ds">Version 3</span></button>
       </div>
-      <span class="spacer"></span>
-      <span class="top-pill">🛡️ Protégé par la famille</span>
-    </div>
+      <div class="note">👆 La <strong>pastille XMO</strong> ramène toujours ici. La <strong>télé</strong> en bas à droite joue la radio <strong>en vrai</strong> — cliquez-la pour l'agrandir.</div>
+    </section>
 
-    <!-- CONTENT -->
-    <div class="content" id="content">
+    <!-- MAIL -->
+    <section class="universe" id="u-mail">
+      <div class="u-title"><span class="med">📬</span><h2>Mes boîtes mails</h2></div>
+      <p class="u-sub">Vos messages, analysés un par un par le bouclier.</p>
+      <div id="mailview"></div>
+    </section>
 
-      <!-- HOME : les univers -->
-      <section class="universe active" id="u-home">
-        <div class="home-grid">
-          <button class="uni" onclick="openU('u-pros')"><span class="em">📁</span><span class="nm">Mes dossiers pros</span><span class="ds">Factures, clients, contrats…</span></button>
-          <button class="uni" onclick="openU('u-perso')"><span class="em">🏠</span><span class="nm">Mes dossiers perso</span><span class="ds">Santé, maison, impôts, famille</span></button>
-          <button class="uni" onclick="openU('u-drafts')"><span class="count">7 à ranger</span><span class="em">🗂️</span><span class="nm">Mes brouillons</span><span class="ds">Documents à classer</span></button>
-          <button class="uni accent" onclick="openU('u-mail')"><span class="em">📬</span><span class="nm">Mes boîtes mails</span><span class="ds">Toutes vos adresses, protégées</span></button>
-          <button class="uni" onclick="openU('u-photopro')"><span class="em">🎬</span><span class="nm">Photos & vidéos pros</span><span class="ds">Retouche, filtres, montage</span></button>
-          <button class="uni" onclick="openU('u-photoperso')"><span class="em">📸</span><span class="nm">Photos & vidéos perso</span><span class="ds">Vos souvenirs de famille</span></button>
-          <button class="uni" onclick="openU('u-social')"><span class="em">🌐</span><span class="nm">Mes réseaux sociaux</span><span class="ds">Publier en un clic</span></button>
-          <button class="uni" onclick="openU('u-media')"><span class="em">📺</span><span class="nm">Mes médias</span><span class="ds">TV, radio, musique, presse</span></button>
-          <button class="uni" onclick="openU('u-avis')"><span class="em">⭐</span><span class="nm">Mes avis</span><span class="ds">Donnez votre avis, gagnez</span></button>
-        </div>
-        <div class="note">👆 Cliquez un univers pour l'ouvrir. La <strong>pastille XMO</strong> en haut à gauche vous ramène toujours ici. La <strong>télé</strong>, en bas à droite, s'agrandit d'un clic.</div>
-      </section>
+    <!-- FAMILLE -->
+    <section class="universe" id="u-famille">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-famille)">👨‍👩‍👧</span><h2>Ma famille</h2></div>
+      <p class="u-sub">Vos proches, préparés par votre famille.</p>
+      <div class="cards" id="famcards"></div>
+    </section>
 
-      <!-- MAIL -->
-      <section class="universe" id="u-mail">
-        <div class="u-title"><span class="em">📬</span><h2>Mes boîtes mails</h2></div>
-        <p class="u-sub">Gmail, Outlook, Yahoo, iCloud, Orange… tout est réuni ici. Vous ne voyez jamais le fournisseur, juste vos messages.</p>
-        <div id="mailview"></div>
-      </section>
+    <!-- AGENDA -->
+    <section class="universe" id="u-agenda">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-agenda)">📅</span><h2>Mon agenda</h2></div>
+      <p class="u-sub">Vos rendez-vous, expliqués simplement.</p>
+      <div id="agendaview"></div>
+    </section>
 
-      <!-- DRAFTS -->
-      <section class="universe" id="u-drafts">
-        <div class="u-title"><span class="em">🗂️</span><h2>Mes brouillons</h2></div>
-        <p class="u-sub">Tous les documents créés et laissés en l'état. Rangez-les tranquillement, un par un.</p>
-        <div class="cards" id="draftcards"></div>
-      </section>
+    <!-- DRAFTS -->
+    <section class="universe" id="u-drafts">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-brouillons)">🗂️</span><h2>Mes brouillons</h2></div>
+      <p class="u-sub">Les documents laissés en l'état. <strong>✨ XMO lit chaque document et propose où le ranger.</strong></p>
+      <div class="cards" id="draftcards"></div>
+    </section>
 
-      <!-- DOSSIERS PROS -->
-      <section class="universe" id="u-pros">
-        <div class="u-title"><span class="em">📁</span><h2>Mes dossiers pros</h2></div>
-        <p class="u-sub">Vos affaires professionnelles, bien rangées.</p>
-        <div class="cards">
-          <div class="card"><span class="cem">🧾</span><span class="ct">Factures</span><span class="cd">24 documents</span></div>
-          <div class="card"><span class="cem">🤝</span><span class="ct">Clients</span><span class="cd">11 dossiers</span></div>
-          <div class="card"><span class="cem">📑</span><span class="ct">Contrats</span><span class="cd">6 documents</span></div>
-          <div class="card"><span class="cem">💶</span><span class="ct">Comptabilité</span><span class="cd">Suivi 2026</span></div>
-        </div>
-      </section>
+    <!-- DOSSIERS -->
+    <section class="universe" id="u-dossiers">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-dossiers)">📁</span><h2>Mes dossiers</h2></div>
+      <p class="u-sub">Tout ce qui compte, à sa place.</p>
+      <div id="dossiersview"></div>
+    </section>
 
-      <!-- DOSSIERS PERSO -->
-      <section class="universe" id="u-perso">
-        <div class="u-title"><span class="em">🏠</span><h2>Mes dossiers perso</h2></div>
-        <p class="u-sub">Tout ce qui compte à la maison.</p>
-        <div class="cards">
-          <div class="card"><span class="cem">❤️</span><span class="ct">Santé</span><span class="cd">Ordonnances, rendez-vous</span></div>
-          <div class="card"><span class="cem">🏡</span><span class="ct">Maison</span><span class="cd">Assurances, quittances</span></div>
-          <div class="card"><span class="cem">🧮</span><span class="ct">Impôts</span><span class="cd">Avis, déclarations</span></div>
-          <div class="card"><span class="cem">👨‍👩‍👧</span><span class="ct">Famille</span><span class="cd">Papiers importants</span></div>
-        </div>
-      </section>
+    <!-- PHOTOS -->
+    <section class="universe" id="u-photos">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-photos)">📸</span><h2>Mes photos</h2></div>
+      <p class="u-sub">Vos souvenirs, faciles à revoir et à envoyer à la famille.</p>
+      <div class="thumbs" id="thumbs"></div>
+    </section>
 
-      <!-- PHOTOS PRO -->
-      <section class="universe" id="u-photopro">
-        <div class="u-title"><span class="em">🎬</span><h2>Ma banque photos & vidéos pros</h2></div>
-        <p class="u-sub">Avec de quoi retoucher simplement : recadrer, éclaircir, filtres.</p>
-        <div class="toolbar-edit">
-          <span class="chip">✂️ Recadrer</span><span class="chip">☀️ Éclaircir</span><span class="chip">🎨 Filtres</span><span class="chip">🎞️ Montage vidéo</span>
-        </div>
-        <div class="thumbs" id="thumbspro"></div>
-      </section>
-
-      <!-- PHOTOS PERSO -->
-      <section class="universe" id="u-photoperso">
-        <div class="u-title"><span class="em">📸</span><h2>Ma banque photos & vidéos perso</h2></div>
-        <p class="u-sub">Vos souvenirs, faciles à revoir et à partager avec la famille.</p>
-        <div class="toolbar-edit">
-          <span class="chip">✂️ Recadrer</span><span class="chip">☀️ Éclaircir</span><span class="chip">🎨 Filtres</span><span class="chip">📤 Envoyer à un proche</span>
-        </div>
-        <div class="thumbs" id="thumbsperso"></div>
-      </section>
-
-      <!-- SOCIAL -->
-      <section class="universe" id="u-social">
-        <div class="u-title"><span class="em">🌐</span><h2>Mes réseaux sociaux</h2></div>
-        <p class="u-sub">Accès direct à chaque réseau — et une caméra pour publier une photo ou une vidéo en un clic.</p>
-        <div style="margin-bottom:18px">
-          <button class="btn btn-honey" style="font-size:1.1rem;padding:16px 24px" onclick="toast('🎥 Caméra activée — filmez, puis choisissez où publier')">🎥 Filmer et publier maintenant</button>
-        </div>
-        <div class="social">
-          <button class="sbtn" onclick="toast('Ouverture de Facebook…')"><span class="slogo" style="background:#1877F2">f</span>Facebook</button>
-          <button class="sbtn" onclick="toast('Ouverture d\'Instagram…')"><span class="slogo" style="background:linear-gradient(45deg,#E1306C,#F77737)">◎</span>Instagram</button>
-          <button class="sbtn" onclick="toast('Ouverture de WhatsApp…')"><span class="slogo" style="background:#25D366">✆</span>WhatsApp</button>
-          <button class="sbtn" onclick="toast('Ouverture de YouTube…')"><span class="slogo" style="background:#FF0000">▶</span>YouTube</button>
-        </div>
-      </section>
-
-      <!-- MEDIA -->
-      <section class="universe" id="u-media">
-        <div class="u-title"><span class="em">📺</span><h2>Mes médias</h2></div>
-        <p class="u-sub">Tout ce qui se regarde et s'écoute — et ça tourne dans la télé en bas à droite. Cliquez la télé pour l'agrandir.</p>
-        <div class="media-grid">
-          <button class="mtile" onclick="playRadio('laradioai','La Radio AI')"><span class="mem">🎙️</span>La Radio AI<span class="md">Radio 100 % IA · joue en vrai !</span></button>
-          <button class="mtile" onclick="playRadio('franceinter','France Inter')"><span class="mem">📻</span>France Inter<span class="md">Radio en direct · joue en vrai !</span></button>
-          <button class="mtile" onclick="tvChannel('France 2 · en direct')"><span class="mem">📺</span>Chaînes TV<span class="md">TNT en direct</span></button>
-          <button class="mtile" onclick="tvChannel('Deezer · playlist')"><span class="mem">🎵</span>Deezer<span class="md">Musique</span></button>
-          <button class="mtile" onclick="tvChannel('Apple Music')"><span class="mem">🍎</span>Apple Music<span class="md">Musique</span></button>
-          <button class="mtile" onclick="tvChannel('La Presse du jour')"><span class="mem">📰</span>Presse<span class="md">Articles du jour</span></button>
-          <button class="mtile" onclick="tvChannel('YouTube')"><span class="mem">▶️</span>YouTube<span class="md">Vidéos</span></button>
-        </div>
-      </section>
-
-      <!-- AVIS -->
-      <section class="universe" id="u-avis">
-        <div class="u-title"><span class="em">⭐</span><h2>Mes avis</h2></div>
-        <p class="u-sub">Donnez votre avis sur des pubs, des sujets, des questions — et gagnez une petite cagnotte à reverser où vous voulez.</p>
-        <div class="cagnotte">
-          <div><div style="font-size:.85rem;opacity:.9">Votre cagnotte du mois</div><div class="amt">8,40 €</div></div>
-          <button class="btn" style="background:#fff;color:#a56d26" onclick="toast('Choisissez une association ou un achat partenaire')">Utiliser ma cagnotte</button>
-        </div>
-        <div class="cards">
-          <div class="card"><span class="cem">🎬</span><span class="ct">Donnez votre avis</span><span class="cd">Une pub de 20 s · +0,30 €</span><button class="btn btn-primary" style="margin-top:8px" onclick="toast('Merci ! +0,30 € ajoutés à votre cagnotte')">Regarder & noter</button></div>
-          <div class="card"><span class="cem">🗳️</span><span class="ct">Question du jour</span><span class="cd">« Utilisez-vous le paiement sans contact ? »</span><button class="btn btn-ghost" style="margin-top:8px" onclick="toast('Réponse enregistrée · +0,10 €')">Répondre</button></div>
-        </div>
-      </section>
-
-    </div><!-- /content -->
-
-    <!-- TV widget -->
-    <div class="tv" id="tv" onclick="toggleTv()" role="button" aria-label="Télévision — cliquer pour agrandir">
-      <div class="tv-screen"></div>
-      <span class="live">● DIRECT</span>
-      <span class="exit" aria-hidden="true">✕</span>
-      <span class="ch" id="tvch">France 2 · en direct</span>
-      <span class="hint">cliquer pour agrandir</span>
-    </div>
-
-    <div class="toast" id="toast"></div>
-    <div class="modal" id="modal">
-      <div class="card2">
-        <h4>Envoyer ce message ?</h4>
-        <p id="m-text"></p>
-        <div class="row">
-          <button class="btn btn-ghost" onclick="closeModal()">Non, annuler</button>
-          <button class="btn btn-primary" id="m-ok">Oui, envoyer</button>
-        </div>
+    <!-- MEDIA -->
+    <section class="universe" id="u-media">
+      <div class="u-title"><span class="med" style="--med-bg:var(--med-medias)">📻</span><h2>Mes médias</h2></div>
+      <p class="u-sub">La radio joue <strong>en vrai</strong> dans la télé en bas à droite. La presse se lit à voix haute.</p>
+      <div class="media-grid">
+        <button class="mtile" data-radio="laradioai" onclick="playRadio('laradioai','La Radio AI')"><span class="mem">🎙️</span>La Radio AI<span class="md">La radio 100 % IA, en direct</span></button>
+        <button class="mtile" data-radio="franceinter" onclick="playRadio('franceinter','France Inter')"><span class="mem">📻</span>France Inter<span class="md">Radio en direct</span></button>
+        <button class="mtile" data-radio="fip" onclick="playRadio('fip','FIP')"><span class="mem">🎵</span>FIP<span class="md">Musique en direct</span></button>
+        <button class="mtile" onclick="openPress()"><span class="mem">📰</span>La presse<span class="md">Les titres du jour, lus pour vous</span></button>
+        <button class="mtile soon" onclick="toast('📺 Les chaînes TV arrivent en version 2 (droits en cours)')"><span class="mem">📺</span>Chaînes TV<span class="md">À venir · V2</span></button>
+        <button class="mtile soon" onclick="toast('🎵 Deezer / Apple Music arrivent en version 2')"><span class="mem">🍎</span>Musique<span class="md">À venir · V2</span></button>
       </div>
-    </div>
+      <div id="pressview" style="margin-top:18px"></div>
+    </section>
 
   </div>
+
+  <!-- TV -->
+  <div class="tv" id="tv" onclick="toggleTv()" role="button" aria-label="Télé — cliquer pour agrandir">
+    <div class="tv-screen"></div>
+    <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="live">● DIRECT</span>
+    <span class="exit" aria-hidden="true">✕</span>
+    <span class="ch" id="tvch">Cliquez un média pour écouter</span>
+    <span class="hint">cliquer pour agrandir</span>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="modal">
+    <div class="card2">
+      <h4 id="m-title"></h4>
+      <p id="m-text"></p>
+      <div id="m-extra"></div>
+      <div class="row">
+        <button class="btn btn-ghost" id="m-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn btn-primary" id="m-ok">Oui</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  /* ---------- universe nav ---------- */
-  function openU(id){
-    document.querySelectorAll('.universe').forEach(u=>u.classList.toggle('active',u.id===id));
-    document.getElementById('content').scrollTop=0;
-    if(id==='u-mail') renderMailList();
-    if(id==='u-drafts') renderDrafts();
-    if(id==='u-photopro') renderThumbs('thumbspro','pro');
-    if(id==='u-photoperso') renderThumbs('thumbsperso','perso');
-  }
-  function home(){ openU('u-home'); }
+/* ═══ Version démo publique : mêmes écrans que XMO, données d'exemple. ═══ */
+const $ = id => document.getElementById(id);
+const esc = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initials = n => (n||'?').trim().split(/[\s·]+/).slice(0,1).map(w=>w[0]).join('').toUpperCase();
+const COLORS = ['#C2557A','#1E6091','#C98A3C','#2E7D63','#7A4A73','#3F5566'];
+const colorFor = s => COLORS[[...(s||'x')].reduce((a,c)=>a+c.charCodeAt(0),0) % COLORS.length];
 
-  /* ---------- TV + radio réelle ---------- */
-  function toggleTv(){ document.getElementById('tv').classList.toggle('full'); }
-  function tvChannel(name){ document.getElementById('tvch').textContent=name; toast('▶ '+name+' — la télé est en bas à droite'); }
-  const RADIOS = {
-    laradioai:   'https://stream.la-radio.ai/listen/la_radio_ai_/radio.mp3',
-    franceinter: 'https://icecast.radiofrance.fr/franceinter-midfi.mp3',
-  };
-  let audio=null, currentRadio=null;
-  function playRadio(key, label){
-    if(currentRadio===key){                       // re-clic = stop
-      if(audio){audio.pause();audio=null;}
-      currentRadio=null;
-      document.getElementById('tvch').textContent='Cliquez un média pour écouter';
-      toast('⏸ Radio arrêtée'); return;
-    }
-    if(audio) audio.pause();
-    audio=new Audio(RADIOS[key]); audio.play().catch(()=>toast('⚠️ Flux indisponible'));
-    currentRadio=key;
-    document.getElementById('tvch').textContent=label+' · en direct';
-    toast('▶ '+label+' — dans la télé en bas à droite');
-  }
+/* ── manchette ── */
+function refreshDate(){
+  const d = new Date();
+  $('greet').textContent = (d.getHours()<18?'Bonjour':'Bonsoir') + ' Jacqueline.';
+  $('datebar').textContent = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})
+    + ' · ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+refreshDate(); setInterval(refreshDate, 30000);
 
-  /* ---------- mail data ---------- */
-  const MAILS={
-    sophie:{who:'Sophie · votre fille',color:'#C2557A',addr:'sophie.d@gmail.com',time:'11:40',
-      subj:'Coucou maman, on vient dimanche !',
-      body:"Coucou maman,\n\nOn passe dimanche midi avec les enfants. Léo a hâte de te montrer son vélo !\nTu veux qu'on apporte le dessert ? Je t'embrasse fort.\nSophie",
-      scam:false,reply:"Avec plaisir ma chérie, je vous attends dimanche midi. Ne t'occupe pas du dessert, je fais une tarte. Bises à Léo.\nMaman ❤️"},
-    edf:{who:'Service EDF',color:'#B23A26',addr:'no-reply@edf-facture-secure.net',time:'08:47',
-      subj:'URGENT : votre compte va être suspendu',
-      body:"Votre facture n'a pas pu être prélevée. Sans régularisation sous 24 h, votre électricité sera COUPÉE.\nCliquez ici pour mettre à jour vos coordonnées bancaires : http://edf-facture-secure.net/paiement",
-      scam:true},
-  };
-  const initials=n=>n.split(/[ ·]/).filter(Boolean).slice(0,1).map(w=>w[0]).join('').toUpperCase();
-  function renderMailList(){
-    document.getElementById('mailview').innerHTML='<div class="mlist" id="mlist"></div>';
-    const box=document.getElementById('mlist'); box.innerHTML='';
-    Object.keys(MAILS).forEach(k=>{const m=MAILS[k];
-      const el=document.createElement('button'); el.className='mail'+(m.scam?' flag':''); el.onclick=()=>openMail(k);
-      el.innerHTML=`<div class="av" style="background:${m.color}">${m.scam?'⚠️':initials(m.who)}</div>
-        <div style="flex:1;min-width:0"><div class="who">${m.who}${m.scam?'<span class="flagchip">SUSPECT</span>':''}</div><div class="subj">${m.subj}</div></div>
-        <span class="time">${m.time}</span>`;
-      box.appendChild(el);});
-  }
-  function openMail(k){
-    const m=MAILS[k]; let html='<button class="backline" onclick="renderMailList()">← Mes messages</button><div class="read">';
-    if(m.scam){
-      html+=`<div class="warncard"><div class="h">⚠️ Message suspect — ne répondez pas</div>
-        <div style="color:var(--warn-strong);margin-top:6px">Ce faux « EDF » veut vous faire peur pour voler vos informations bancaires.</div>
-        <ul><li>L'adresse (edf-facture-secure.net) n'est pas celle d'EDF.</li><li>Il menace d'une coupure en 24 h.</li><li>Il réclame vos coordonnées bancaires.</li></ul></div>
-        <h3>${m.subj}</h3><div class="content-t" style="color:var(--ink-soft)">${m.body.replace(/\n/g,'<br>')}</div>
-        <div class="actions"><button class="btn btn-danger" onclick="toast('Supprimé et signalé ✓');renderMailList()">🗑️ Supprimer</button>
-        <button class="btn btn-warnghost" onclick="toast('Votre fils Marc a été prévenu 🛡️')">Prévenir ma famille</button></div>`;
-    } else {
-      html+=`<div style="display:flex;gap:12px;align-items:center"><div class="av" style="background:${m.color}">${initials(m.who)}</div>
-        <div><div class="who">${m.who}</div><div class="subj">${m.addr}</div></div></div>
-        <h3>${m.subj}</h3><div class="content-t">${m.body.replace(/\n/g,'<br>')}</div>
-        <div class="actions"><button class="btn btn-ghost" onclick="speak(${JSON.stringify(m.body).replace(/"/g,'&quot;')})">🔊 Lire à voix haute</button>
-        <button class="btn btn-primary" onclick="openReply('${k}')">↩︎ Répondre</button></div>`;
-    }
-    html+='</div>'; document.getElementById('mailview').innerHTML=html;
-  }
-  function openReply(k){
-    const m=MAILS[k];
-    document.getElementById('mailview').innerHTML=`<button class="backline" onclick="openMail('${k}')">← Retour</button>
-      <div class="read"><div style="color:var(--ink-soft);font-weight:600">✨ Réponse proposée — vous pouvez la modifier</div>
-      <textarea id="rt">${m.reply}</textarea>
-      <div class="actions"><button class="btn btn-ghost" onclick="speak(document.getElementById('rt').value)">🔊 Écouter</button>
-      <button class="btn btn-primary" onclick="confirmSend('${m.who.split(' ')[0]}')">Envoyer ✓</button></div></div>`;
-  }
+/* ── nav ── */
+function openU(id){
+  stopSpeak();
+  document.querySelectorAll('.universe').forEach(u=>u.classList.toggle('active',u.id===id));
+  $('content').scrollTop = 0;
+  if(id==='u-mail') renderMailList();
+  if(id==='u-famille') renderFam();
+  if(id==='u-agenda') renderAgenda();
+  if(id==='u-drafts') renderDrafts();
+  if(id==='u-dossiers') renderDossiers();
+  if(id==='u-photos') renderThumbs();
+}
+function home(){ openU('u-home'); }
 
-  /* ---------- drafts ---------- */
-  const DRAFTS=[
-    {em:'📄',t:'Lettre au notaire.docx',d:'Créé hier'},
-    {em:'📊',t:'Budget vacances.xlsx',d:'Créé lundi'},
-    {em:'📄',t:'Compte-rendu médecin.docx',d:'Il y a 3 jours'},
-    {em:'🖼️',t:'Scan carte grise.jpg',d:'La semaine dernière'},
-    {em:'📄',t:'Mot pour la mairie.docx',d:'La semaine dernière'},
-    {em:'📊',t:'Liste invités.xlsx',d:'La semaine dernière'},
-    {em:'📄',t:'Brouillon assurance.docx',d:'Il y a 2 semaines'},
+/* ── mails de démonstration (avec verdicts du bouclier) ── */
+const MAILS = [
+  {from_name:'Sophie', from_addr:'sophie.d@gmail.com', subject:'Coucou maman, on vient dimanche !',
+   body:"Coucou maman,\n\nOn passe dimanche midi avec les enfants. Léo a hâte de te montrer son vélo !\nTu veux qu'on apporte le dessert ? Je t'embrasse fort.\nSophie",
+   shield:{verdict:'ok', resume:"Sophie et les enfants viennent déjeuner dimanche midi. Elle demande si elle apporte le dessert.",
+     raisons:[], reponse_suggeree:"Avec plaisir ma chérie, je vous attends dimanche midi. Ne t'occupe pas du dessert, je fais une tarte. Bises à Léo.\nMaman ❤️"}},
+  {from_name:'Cabinet du Dr Martin', from_addr:'secretariat@cabinet-martin.fr', subject:'Rappel de votre rendez-vous — jeudi 15 h',
+   body:"Bonjour Madame,\n\nNous vous rappelons votre rendez-vous avec le Docteur Martin jeudi à 15 h 00.\nMerci de venir avec votre carte Vitale.\nLe secrétariat",
+   shield:{verdict:'ok', resume:"Le cabinet du Docteur Martin rappelle votre rendez-vous de jeudi 15 h. Pensez à la carte Vitale.",
+     raisons:[], reponse_suggeree:"Bonjour, c'est bien noté pour jeudi 15 h, je serai là avec ma carte Vitale. Merci.\nJacqueline"}},
+  {from_name:'Service EDF', from_addr:'no-reply@edf-facture-secure.net', subject:'URGENT : votre compte va être suspendu',
+   body:"Cher client,\n\nVotre dernière facture n'a pas pu être prélevée. Sans régularisation sous 24h, votre électricité sera COUPÉE.\n\nMettez à jour vos coordonnées bancaires : http://edf-facture-secure.net/paiement\n\nService recouvrement",
+   shield:{verdict:'suspect', resume:"Ce message essaie de vous faire peur pour voler vos informations bancaires. Ce n'est pas le vrai EDF.",
+     raisons:["L'adresse (edf-facture-secure.net) n'est pas celle d'EDF","Il menace d'une coupure en 24 h pour vous presser","Il réclame vos coordonnées bancaires par un lien"], reponse_suggeree:''}},
+];
+function renderMailList(){
+  let html = '<div class="mlist">';
+  MAILS.forEach((m,i)=>{
+    const v = m.shield.verdict;
+    html += `<button class="mail${v==='suspect'?' flag':''}" onclick="openMail(${i})">
+      <div class="av" style="background:${v==='suspect'?'var(--rouge)':colorFor(m.from_name)}">${v==='suspect'?'⚠️':initials(m.from_name)}</div>
+      <div style="flex:1;min-width:0"><div class="who">${esc(m.from_name)}${v==='suspect'?'<span class="chipflag suspect">SUSPECT</span>':''}</div>
+      <div class="subj">${esc(m.subject)}</div></div><span class="time">aujourd'hui</span></button>`;
+  });
+  $('mailview').innerHTML = html + '</div>';
+}
+function openMail(i){
+  const m = MAILS[i], s = m.shield;
+  let html = '<button class="backline" onclick="renderMailList()">← Mes messages</button><div class="read">';
+  if(s.verdict === 'suspect'){
+    html += `<div class="warncard"><div class="h">⚠️ Message suspect — ne répondez pas</div>
+      <div style="margin-top:6px">${esc(s.resume)}</div>
+      <ul>${s.raisons.map(r=>'<li>'+esc(r)+'</li>').join('')}</ul></div>`;
+  } else if(s.resume){
+    html += `<div class="resume"><b>✨ En résumé :</b> ${esc(s.resume)}</div>`;
+  }
+  html += `<div style="display:flex;gap:12px;align-items:center">
+    <div class="av" style="background:${colorFor(m.from_name)}">${initials(m.from_name)}</div>
+    <div><div class="who" style="font-weight:700">${esc(m.from_name)}</div>
+    <div style="color:var(--ink-soft);font-size:.85rem">${esc(m.from_addr)}</div></div></div>
+    <h3>${esc(m.subject)}</h3>
+    <div class="content-t"${s.verdict==='suspect'?' style="color:var(--ink-soft)"':''}>${esc(m.body)}</div>`;
+  if(s.verdict === 'suspect'){
+    html += `<div class="actions">
+      <button class="btn btn-danger" onclick="toast('Message signalé ✓ — n\\'y répondez jamais');renderMailList()">🗑️ Supprimer</button>
+      <button class="btn btn-warnghost" onclick="toast('Votre famille a été prévenue 🛡️')">Prévenir ma famille</button></div>`;
+  } else {
+    html += `<div class="actions">
+      <button class="btn btn-ghost" onclick="speak(MAILS[${i}].body, this)">🔊 Lire à voix haute</button>
+      <button class="btn btn-primary" onclick="openReply(${i})">↩︎ Répondre</button></div>`;
+  }
+  $('mailview').innerHTML = html + '</div>';
+}
+function openReply(i){
+  const m = MAILS[i];
+  $('mailview').innerHTML = `<button class="backline" onclick="openMail(${i})">← Retour</button>
+    <div class="read"><h3>Répondre à ${esc(m.from_name)}</h3>
+    <div style="color:var(--ink-soft);font-weight:600">✨ Réponse proposée — vous pouvez la modifier</div>
+    <textarea id="rt">${esc(m.shield.reponse_suggeree)}</textarea>
+    <div class="actions"><button class="btn btn-ghost" onclick="speak($('rt').value, this)">🔊 Écouter</button>
+    <button class="btn btn-primary" onclick="confirmSend('${esc(m.from_name)}')">Envoyer ✓</button></div></div>`;
+}
+function confirmSend(name){
+  $('m-title').textContent = 'Envoyer ce message ?';
+  $('m-text').textContent = 'Le message sera envoyé à ' + name + '.';
+  $('m-extra').innerHTML = ''; $('m-cancel').textContent = 'Non, annuler'; $('m-ok').textContent = 'Oui, envoyer';
+  $('m-ok').onclick = () => { closeModal(); home(); toast('Message envoyé à '+name+' ✓'); };
+  $('modal').classList.add('show');
+}
+
+/* ── famille ── */
+const FAM = [
+  {nom:'Sophie', lien:'votre fille'}, {nom:'Marc', lien:'votre fils'},
+  {nom:'Léo', lien:'votre petit-fils'}, {nom:'Docteur Martin', lien:'votre médecin'},
+];
+function renderFam(){
+  const box = $('famcards'); box.innerHTML = '';
+  FAM.forEach(c=>{
+    const el = document.createElement('div'); el.className = 'contact';
+    el.innerHTML = `<div class="avatar" style="background:${colorFor(c.nom)}">${initials(c.nom)}</div>
+      <div class="cn">${esc(c.nom)}</div><div class="cr">${esc(c.lien)}</div>
+      <div class="crow">
+        <button class="btn btn-primary" onclick="toast('📞 Appel de ${esc(c.nom)}…')">📞 Appeler</button>
+        <button class="btn btn-ghost" onclick="composeTo('${esc(c.nom)}')">✉️ Écrire</button>
+      </div>`;
+    box.appendChild(el);
+  });
+}
+function composeTo(nom){
+  openU('u-mail');
+  $('mailview').innerHTML = `<button class="backline" onclick="openU('u-famille')">← Ma famille</button>
+    <div class="read"><h3>Écrire à ${esc(nom)}</h3>
+    <textarea id="ct2">Bonjour ${esc(nom)}, </textarea>
+    <div class="actions"><button class="btn btn-ghost" onclick="speak($('ct2').value, this)">🔊 Écouter</button>
+    <button class="btn btn-primary" onclick="confirmSend('${esc(nom)}')">Envoyer ✓</button></div></div>`;
+}
+
+/* ── agenda (dates relatives à aujourd'hui) ── */
+function agendaEvents(){
+  const d1 = new Date(); d1.setDate(d1.getDate()+1);
+  const d2 = new Date(); d2.setDate(d2.getDate()+4);
+  return [
+    {d:d1, heure:'15:00', titre:'Rendez-vous Docteur Martin', note:'12 rue des Lilas — pensez à votre carte Vitale'},
+    {d:d2, heure:'12:00', titre:'Déjeuner avec Sophie et les enfants', note:'Ils apportent le dessert'},
   ];
-  function renderDrafts(){
-    const box=document.getElementById('draftcards'); box.innerHTML='';
-    DRAFTS.forEach((d,i)=>{const el=document.createElement('div'); el.className='card';
-      el.innerHTML=`<span class="cem">${d.em}</span><span class="ct">${d.t}</span><span class="cd">${d.d}</span>
-        <button class="btn btn-primary" style="margin-top:8px" onclick="toast('Où ranger « ${d.t} » ? Pros ou Perso ?')">Ranger</button>`;
-      box.appendChild(el);});
-  }
+}
+function renderAgenda(){
+  $('agendaview').innerHTML = agendaEvents().map(e=>{
+    const when = e.d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+' · '+e.heure;
+    return `<div class="agenda-ev"><span class="when">${esc(when)}</span>
+      <span class="what">${esc(e.titre)}<span class="note2">${esc(e.note)}</span></span></div>`;
+  }).join('') + `<div class="actions" style="margin-top:14px">
+    <button class="btn btn-ghost" onclick="speakAgenda(this)">🔊 Écouter mon agenda</button></div>`;
+}
+function speakAgenda(btn){
+  speak(agendaEvents().map(e=>
+    e.d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+' à '+e.heure+' : '+e.titre+'. '+e.note
+  ).join(' '), btn);
+}
 
-  /* ---------- photo thumbs ---------- */
-  function renderThumbs(id,kind){
-    const box=document.getElementById(id); if(box.childElementCount) return; box.innerHTML='';
-    const hues = kind==='pro'?[168,150,190,205,140,175]:[20,340,300,45,10,280];
-    hues.concat(hues).slice(0,10).forEach((h,i)=>{const t=document.createElement('div'); t.className='thumb';
-      t.style.background=`linear-gradient(${i*40}deg, hsl(${h} 45% 62%), hsl(${(h+40)%360} 40% 48%))`;
-      box.appendChild(t);});
-  }
+/* ── brouillons + rangement (simulation du vrai comportement) ── */
+let DRAFTS = [
+  {em:'📄',name:'Compte-rendu visite Dr Martin.docx',modified:'hier',dest:'Dossiers perso → Santé',pourquoi:'Le document parle d\'une consultation médicale et d\'une ordonnance.'},
+  {em:'📄',name:'Lettre au notaire maison.docx',modified:'lundi',dest:'Dossiers perso → Maison',pourquoi:'Il s\'agit de la succession de la maison de Saint-Paul.'},
+  {em:'📊',name:'Liste invités anniversaire Léo.xlsx',modified:'lundi',dest:'Dossiers perso → Famille',pourquoi:'C\'est la liste des invités pour l\'anniversaire de votre petit-fils.'},
+  {em:'📕',name:'Facture plombier cuisine.pdf',modified:'il y a 3 jours',dest:'Dossiers pros → Factures',pourquoi:'C\'est une facture d\'intervention réglée.'},
+  {em:'📄',name:'Avis impots 2025.pdf',modified:'la semaine dernière',dest:'Dossiers perso → Impôts',pourquoi:'C\'est votre avis d\'imposition, à conserver.'},
+  {em:'🖼️',name:'Scan carte grise.jpg',modified:'la semaine dernière',dest:'Dossiers perso → Maison',pourquoi:'Un papier officiel du véhicule, à garder avec les documents de la maison.'},
+  {em:'📄',name:'Mot pour la mairie.docx',modified:'il y a 2 semaines',dest:'Dossiers perso → Maison',pourquoi:'Un courrier administratif adressé à la mairie.'},
+];
+function renderDrafts(){
+  const box = $('draftcards'); box.innerHTML = '';
+  if(!DRAFTS.length){ box.innerHTML = '<div class="note" style="grid-column:1/-1">🎉 Tout est rangé, bravo !</div>'; return; }
+  DRAFTS.forEach((d,i)=>{
+    const el = document.createElement('div'); el.className = 'card';
+    el.innerHTML = `<span class="cem">${d.em}</span><span class="ct">${esc(d.name)}</span>
+      <span class="cd">Modifié ${esc(d.modified)}</span>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="rangerIA(${i},this)">✨ Ranger</button>`;
+    box.appendChild(el);
+  });
+}
+function updateDraftBadge(){
+  const b = $('draftbadge');
+  b.textContent = DRAFTS.length ? DRAFTS.length + ' à ranger' : 'Tout rangé ✓';
+  if(!DRAFTS.length) b.style.background = 'var(--vert)';
+}
+function rangerIA(i, btn){
+  const d = DRAFTS[i];
+  btn.disabled = true; btn.innerHTML = '<span class="spin" style="border-top-color:#fff"></span> XMO lit…';
+  setTimeout(()=>{
+    btn.disabled = false; btn.innerHTML = '✨ Ranger';
+    $('m-title').textContent = 'Ranger ce document ?';
+    $('m-text').textContent = 'XMO a lu « '+d.name+' » et propose :';
+    $('m-extra').innerHTML = '<div class="iabox">📁 '+esc(d.dest)+'<small>'+esc(d.pourquoi)+'</small></div>';
+    $('m-cancel').textContent = 'Pas maintenant'; $('m-ok').textContent = 'Oui, ranger là';
+    $('m-ok').onclick = () => {
+      closeModal(); DRAFTS.splice(i,1); renderDrafts(); updateDraftBadge();
+      toast('Rangé dans '+d.dest+' ✓');
+    };
+    $('modal').classList.add('show');
+  }, 900);
+}
 
-  /* ---------- confirm / toast / speech ---------- */
-  function confirmSend(name){
-    document.getElementById('m-text').textContent='Le message sera envoyé à '+name+'.';
-    document.getElementById('m-ok').onclick=()=>{closeModal();toast('Message envoyé à '+name+' ✓');home();};
-    document.getElementById('modal').classList.add('show');
+/* ── dossiers ── */
+function renderDossiers(){
+  const icons = {Factures:'🧾',Clients:'🤝',Contrats:'📑','Santé':'❤️',Maison:'🏡','Impôts':'🧮',Famille:'👨‍👩‍👧'};
+  const data = {Professionnels:[['Factures',24],['Clients',11],['Contrats',6]],
+                Personnels:[['Santé',9],['Maison',14],['Impôts',5],['Famille',7]]};
+  $('dossiersview').innerHTML = Object.entries(data).map(([title,arr])=>
+    `<h3 style="font-family:var(--display);margin:0 0 10px">${title}</h3>
+     <div class="cards" style="margin-bottom:20px">`+arr.map(([n,c])=>
+      `<div class="card"><span class="cem">${icons[n]||'📁'}</span><span class="ct">${n}</span>
+       <span class="cd">${c} documents</span></div>`).join('')+'</div>').join('');
+}
+
+/* ── photos ── */
+function renderThumbs(){
+  const box = $('thumbs'); if(box.childElementCount) return;
+  [20,340,300,45,10,280,200,160,60,120].forEach((h,i)=>{const t=document.createElement('div');t.className='thumb';
+    t.style.background=`linear-gradient(${i*40}deg, hsl(${h} 45% 62%), hsl(${(h+40)%360} 40% 48%))`;box.appendChild(t);});
+}
+
+/* ── médias : la radio joue EN VRAI ── */
+const RADIOS = {
+  laradioai:   'https://stream.la-radio.ai/listen/la_radio_ai_/radio.mp3',
+  franceinter: 'https://icecast.radiofrance.fr/franceinter-midfi.mp3',
+  fip:         'https://icecast.radiofrance.fr/fip-midfi.mp3',
+};
+let audio = null, currentRadio = null;
+function playRadio(key, label){
+  document.querySelectorAll('.mtile').forEach(t=>t.classList.remove('playing'));
+  if(currentRadio === key){
+    if(audio){ audio.pause(); audio = null; }
+    currentRadio = null; $('tv').classList.remove('playing');
+    $('tvch').textContent = 'Cliquez un média pour écouter';
+    toast('⏸ Radio arrêtée'); return;
   }
-  function closeModal(){document.getElementById('modal').classList.remove('show');}
-  let tT; function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2600);}
-  function speak(text){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(text);u.lang='fr-FR';u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u);toast('🔊 Lecture en cours…');}else{toast('Lecture vocale bientôt disponible');}}
+  if(audio) audio.pause();
+  audio = new Audio(RADIOS[key]); audio.play().catch(()=>toast('⚠️ Flux indisponible'));
+  currentRadio = key;
+  document.querySelector(`[data-radio="${key}"]`)?.classList.add('playing');
+  $('tv').classList.add('playing');
+  $('tvch').textContent = label + ' · en direct';
+  toast('▶ ' + label + ' — dans la télé en bas à droite');
+}
+function toggleTv(){ $('tv').classList.toggle('full'); }
+
+/* ── presse (titres d'exemple) ── */
+const PRESS = [
+  {title:"Canicule : les bons gestes pour se protéger cette semaine", desc:"Les températures montent : hydratation, volets fermés aux heures chaudes et nouvelles des proches."},
+  {title:"Arnaques par SMS : la vigilance reste de mise", desc:"Les faux messages de livraison de colis restent le piège le plus répandu — ne cliquez jamais sur les liens."},
+  {title:"Le Tour de France fait étape demain en Provence", desc:"Le peloton traversera trois villages du Luberon, arrivée prévue en fin d'après-midi."},
+];
+function openPress(){
+  $('pressview').innerHTML = '<h3 style="font-family:var(--display)">📰 Les titres du jour <small style="color:var(--ink-soft);font-weight:400">(exemples)</small></h3>' + PRESS.map(it=>
+    `<div class="press-item"><div class="pt">${esc(it.title)}</div>
+     <div class="pd">${esc(it.desc)}</div>
+     <button class="btn btn-ghost" style="margin-top:8px;padding:8px 14px;font-size:.85rem"
+       onclick='speak(${JSON.stringify(it.title+'. '+it.desc)}, this)'>🔊 Écouter</button></div>`).join('');
+}
+
+/* ── modal / toast / voix (avec interrupteur) ── */
+function closeModal(){ $('modal').classList.remove('show'); }
+let tT; function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('show'),2800); }
+let speakingBtn = null;
+function restoreSpeakBtn(){
+  if(speakingBtn && speakingBtn.isConnected && speakingBtn.dataset.label)
+    speakingBtn.innerHTML = speakingBtn.dataset.label;
+  speakingBtn = null;
+}
+function stopSpeak(){
+  if('speechSynthesis' in window && (speechSynthesis.speaking || speechSynthesis.pending))
+    speechSynthesis.cancel();
+  restoreSpeakBtn();
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ toast('Lecture vocale non disponible ici'); return; }
+  const prev = speakingBtn;
+  if(speechSynthesis.speaking || speechSynthesis.pending){
+    stopSpeak();
+    if(btn && btn === prev){ toast('⏹ Lecture arrêtée'); return; }
+  }
+  const u = new SpeechSynthesisUtterance(text); u.lang='fr-FR'; u.rate=.95;
+  u.onend = u.onerror = restoreSpeakBtn;
+  if(btn){ btn.dataset.label = btn.innerHTML; btn.innerHTML = '⏹ Arrêter la lecture'; speakingBtn = btn; }
+  speechSynthesis.speak(u); toast('🔊 Lecture en cours…');
+}
 </script>
+</body>
+</html>
